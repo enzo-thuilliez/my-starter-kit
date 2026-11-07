@@ -10,6 +10,8 @@ These rules apply in every repository. A repo's own `AGENTS.md` / `CLAUDE.md` wi
 
 - Never commit or push directly to `main`.
 - Every change starts from a GitHub issue. If none exists, create one with `gh issue create` before coding.
+- Issues carry exactly one `type:*`, one `priority:*`, one or more `area:*` labels, and the milestone of their roadmap step.
+- Docs-only changes go in their own PR, never mixed into a code PR.
 - Branch name: `<type>/<issue-number>-<short-kebab-desc>` (e.g. `feat/12-add-auth`, `fix/34-null-price`).
 - Commits follow Conventional Commits: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`, `ci:`, `perf:`. Breaking changes use `!` (e.g. `feat!:`).
 - Open the PR with `gh pr create`, fill the PR template, and put `Closes #<issue>` in the body.
@@ -33,5 +35,6 @@ These rules apply in every repository. A repo's own `AGENTS.md` / `CLAUDE.md` wi
 
 - Keep the README selling: one-line pitch, demo or screenshot, quick start, features, then details.
 - Keep the GitHub About in sync (`gh repo edit --description ... --add-topic ...`) when the project's scope changes.
+- A decision with real trade-offs gets an ADR in `DECISIONS.md`; a contract change updates `AGENTS.md` in the same PR.
 - Never commit secrets. Use `.env` (git-ignored) and keep an up-to-date `.env.example`.
 - On an empty or bare repository, suggest running `/kit:kickoff` before writing code.

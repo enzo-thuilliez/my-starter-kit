@@ -118,7 +118,8 @@ Then:
   `package.json` scripts listed in `_kit.md`.
 - **Python**: `uv lock && uv sync`.
 - **Monorepo**: apply the "Monorepo" notes from both `_kit.md` files (working directories,
-  path filters). Merge `.github/dependabot.yml` by hand (one entry per ecosystem and directory),
+  path filters). Merge `ci-api.yml` and `ci-web.yml` into one `ci.yml` (rename jobs `api` and
+  `web`) with a single `ci-pass` that needs both, so protection keeps one check. Merge `.github/dependabot.yml` by hand (one entry per ecosystem and directory),
   and move `release-please-config.json` / `.release-please-manifest.json` to the root with one
   package per app.
 - **Retrofit**: for every file the script reports as skipped, merge what is missing into the
@@ -128,6 +129,9 @@ Then:
   as dependencies + one minimal wiring file with a test; the features themselves are issues.
 
 ## 7. Write the docs
+
+**DECISIONS.md** — write ADR-001 for the stack choice (and one per other real trade-off the
+interview surfaced).
 
 **AGENTS.md** — fill every `<!-- kickoff ... -->` marker: project summary, stack, the command
 table from `_kit.md`, folder map, conventions (including the user's answer to question 13).
@@ -147,7 +151,10 @@ Leave no marker and no `{{PLACEHOLDER}}` behind.
 ## 8. Verify, index, open the PR
 
 1. Run the stack's lint, type-check and tests. Everything must pass. Fix, don't skip.
-2. `pre-commit install && pre-commit run --all-files` (commit any auto-fixes).
+2. `pre-commit install && pre-commit run --all-files` (commit any auto-fixes). This installs
+   the commit-msg hook too, so non-conventional commit messages are rejected locally.
+   `.claude/settings.json` only loads once the user runs `claude` in the repo and trusts it;
+   mention that in the report.
 3. Run `/kit:code-intel` (or follow its SKILL.md) to pick and index the code graph tool and
    write the "Code intelligence" section of AGENTS.md.
 4. Commit in logical Conventional Commits (`chore: add repo template`, `feat: scaffold <stack> app`,
@@ -178,14 +185,15 @@ gh api -X PATCH repos/OWNER/REPO \
   -F delete_branch_on_merge=true -f squash_merge_commit_title=PR_TITLE \
   -f squash_merge_commit_message=PR_BODY
 
-# Labels now (the label-sync workflow only runs once merged on main)
-#   for each entry of .github/labels.yml:
+# Labels now (the label-sync workflow only runs once merged on main). First add the
+# project's area:* labels to .github/labels.yml (one per top-level module or concern,
+# e.g. area:backend, area:frontend, area:agents), then for each entry:
 gh api repos/OWNER/REPO/labels -f name=NAME -f color=COLOR -f description=DESC  # 422 = exists, fine
 
 # Branch protection on main: PR required, CI green, linear history, no force-push
 gh api -X PUT repos/OWNER/REPO/branches/main/protection --input - <<'JSON'
 {
-  "required_status_checks": { "strict": true, "contexts": ["check", "conventional", "gitleaks"] },
+  "required_status_checks": { "strict": true, "contexts": ["ci-pass", "conventional", "gitleaks"] },
   "enforce_admins": <false if the owner may bypass (question 14), true otherwise>,
   "required_pull_request_reviews": null,
   "restrictions": null,
@@ -200,15 +208,19 @@ Some sandboxed environments refuse repository-settings writes (HTTP 403 "not per
 through this proxy"). Then do not retry: give the user these commands as one block to run
 in their own terminal, and say which ones are pending.
 
-Status check names are the **job ids** of the workflows (`check` from ci.yml, `conventional`
-from pr-title.yml, `gitleaks` from secrets.yml). In a monorepo, `check` appears once per
-workflow; list it once. Reviews are not required: the user merges their own PRs.
+Status check names are job names: `ci-pass` (the aggregator at the end of ci.yml, green only
+when every CI job is), `conventional` (pr-title.yml) and `gitleaks` (secrets.yml). New CI jobs
+only need adding to `ci-pass`'s `needs`, never to the protection. Reviews are not required:
+the user merges their own PRs.
 
 ## 10. Roadmap
 
 - Create the milestone **v0.1** (`gh api repos/OWNER/REPO/milestones -f title=v0.1`).
 - One issue per v0.1 feature (Feature template fields: problem, proposal, acceptance criteria),
-  attached to the milestone, labelled `enhancement`. Add a `good first issue` on the smallest one.
+  attached to the milestone, labelled `type:feat` + one `priority:*` + its `area:*` labels.
+  Add `good first issue` on the smallest one.
+- Write `ROADMAP.md`: a short "Done" list and a numbered "Next" list where each step names its
+  milestone and links its issues. Keep it in sync with the milestones.
 - One Task issue for the README screenshot once the first UI exists, if relevant.
 - One Task issue **"chore: remove release-as after v0.1.0"**: the templates pin the first
   release to v0.1.0 with `release-as` in `release-please-config.json`; once that release is
