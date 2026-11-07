@@ -1,0 +1,16 @@
+# OS / editors
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Local agent artifacts (regenerated, never committed)
+.gitnexus/
+graphify-out/
+floorplan/
+CLAUDE.local.md

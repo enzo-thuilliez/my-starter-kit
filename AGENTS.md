@@ -7,6 +7,7 @@ Instructions for AI coding agents working **on this repository** (the kit itself
 `my-starter-kit` is a Claude Code plugin marketplace with one plugin, `kit`:
 
 - `install.sh` — idempotent machine setup (plugins, MCP servers, CLIs).
+- `scripts/apply-template.sh` — copies templates into a project (used by `/kit:kickoff`).
 - `global/CLAUDE.md` — cross-project rules installed into `~/.claude/CLAUDE.md`.
 - `skills/` — plugin skills (`/kit:kickoff`, `/kit:code-intel`).
 - `templates/common/` — files copied into every new repo.
@@ -20,11 +21,11 @@ Instructions for AI coding agents working **on this repository** (the kit itself
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
   (`feat:`, `fix:`, `docs:`, `chore:`…): release-please builds the changelog from them.
 - Templates are copied verbatim into other repos: keep placeholders as `{{PROJECT_NAME}}`,
-  `{{DESCRIPTION}}`, `{{OWNER}}`, and never hard-code this repo's name inside them.
+  `{{DESCRIPTION}}`, `{{OWNER}}`, `{{AUTHOR}}`, `{{YEAR}}`, and never hard-code this repo's name inside them.
 
 ## Checks before opening a PR
 
 ```bash
 claude plugin validate .
-shellcheck install.sh
+shellcheck install.sh scripts/*.sh
 ```
