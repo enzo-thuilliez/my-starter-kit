@@ -1,0 +1,16 @@
+# Run with: uv run promptfoo eval -c evals/promptfooconfig.yaml   (needs API keys in .env)
+description: "{{PROJECT_NAME}} evals"
+
+prompts:
+  - "Answer in one short sentence: {{question}}"
+
+providers:
+  - id: file://evals/provider.py
+    label: default-model
+
+tests:
+  - vars:
+      question: What is the capital of France?
+    assert:
+      - type: icontains
+        value: Paris
