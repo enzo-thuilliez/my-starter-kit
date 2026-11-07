@@ -1,11 +1,14 @@
 {
   "packages": {
     ".": {
-      "release-as": "0.1.0",
       "release-type": "simple",
       "package-name": "my-starter-kit",
       "extra-files": [
-        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" }
+        {
+          "type": "json",
+          "path": ".claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
       ]
     }
   }
