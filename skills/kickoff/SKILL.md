@@ -58,6 +58,8 @@ Skip any question the repo or the conversation already answers. Cover:
 11. **Visuals for the README**: screenshot or GIF later, logo or not.
 12. **Topics** for GitHub (suggest 5–8, let the user edit).
 13. Anything an agent would likely get wrong in this project (conventions, domain rules).
+14. **Admin bypass** on `main` protection: can the owner still push or merge past red checks
+    in an emergency (recommended), or do the rules apply to everyone?
 
 Then write a **short spec** (pitch, user, v0.1 features, stack, LLM, data, auth, deploy, evals)
 and ask the user to confirm or edit it. Do not create anything before the spec is confirmed.
@@ -166,6 +168,10 @@ gh api repos/OWNER/REPO/pulls -f title="..." -f head=BRANCH -f base=main -F body
 gh api -X PATCH repos/OWNER/REPO -f description="<pitch>"
 gh api -X PUT repos/OWNER/REPO/topics -f "names[]=topic1" -f "names[]=topic2"
 
+# Let workflows open PRs (release-please needs it, otherwise the Release workflow fails)
+gh api -X PUT repos/OWNER/REPO/actions/permissions/workflow \
+  -f default_workflow_permissions=read -F can_approve_pull_request_reviews=true
+
 # Squash only, PR title as commit title, delete merged branches
 gh api -X PATCH repos/OWNER/REPO \
   -F allow_squash_merge=true -F allow_merge_commit=false -F allow_rebase_merge=false \
@@ -180,7 +186,7 @@ gh api repos/OWNER/REPO/labels -f name=NAME -f color=COLOR -f description=DESC  
 gh api -X PUT repos/OWNER/REPO/branches/main/protection --input - <<'JSON'
 {
   "required_status_checks": { "strict": true, "contexts": ["check", "conventional", "gitleaks"] },
-  "enforce_admins": false,
+  "enforce_admins": <false if the owner may bypass (question 14), true otherwise>,
   "required_pull_request_reviews": null,
   "restrictions": null,
   "required_linear_history": true,
@@ -189,6 +195,10 @@ gh api -X PUT repos/OWNER/REPO/branches/main/protection --input - <<'JSON'
 }
 JSON
 ```
+
+Some sandboxed environments refuse repository-settings writes (HTTP 403 "not permitted
+through this proxy"). Then do not retry: give the user these commands as one block to run
+in their own terminal, and say which ones are pending.
 
 Status check names are the **job ids** of the workflows (`check` from ci.yml, `conventional`
 from pr-title.yml, `gitleaks` from secrets.yml). In a monorepo, `check` appears once per
