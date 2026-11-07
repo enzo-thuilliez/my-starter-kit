@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Shellcheck
+        run: shellcheck install.sh scripts/*.sh
+
+      - name: Validate plugin and marketplace
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude plugin validate .
+
+      - name: Validate YAML and JSON
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, yaml
+          files = [p for p in pathlib.Path(".").rglob("*") if p.is_file() and ".git" not in p.parts]
+          for p in files:
+              if p.suffix in (".yml", ".yaml"):
+                  yaml.safe_load(p.read_text())
+              elif p.suffix == ".json" and "{{" not in p.read_text():
+                  json.loads(p.read_text())
+          print("ok")
+          PY
+
+      - name: install.sh dry run
+        run: ./install.sh --dry-run --with-omniroute --windows-too
+
+  python-template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      - name: Instantiate and test the Python template
+        run: |
+          T="$RUNNER_TEMP/demo"
+          scripts/apply-template.sh --target "$T" --stack common --stack python \
+            --var PROJECT_NAME=demo --var DESCRIPTION=Demo --var OWNER=demo \
+            --var AUTHOR=Demo --var YEAR=2026
+          cd "$T"
+          echo "# demo" > README.md
+          uv lock && uv sync
+          uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pytest
