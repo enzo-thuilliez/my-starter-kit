@@ -210,9 +210,15 @@ workflow; list it once. Reviews are not required: the user merges their own PRs.
 - One issue per v0.1 feature (Feature template fields: problem, proposal, acceptance criteria),
   attached to the milestone, labelled `enhancement`. Add a `good first issue` on the smallest one.
 - One Task issue for the README screenshot once the first UI exists, if relevant.
+- One Task issue **"chore: remove release-as after v0.1.0"**: the templates pin the first
+  release to v0.1.0 with `release-as` in `release-please-config.json`; once that release is
+  out the key must go, or every later release would also be 0.1.0.
 
 ## 11. Report
 
-Finish with: the PR link (to review and merge), the issues created, the secrets to add in
+Finish with: the PR link (to review and merge), a note that release PRs opened by
+release-please do not trigger CI on their own (GitHub blocks workflows started by the
+built-in token), so the user approves the runs in the Actions tab or merges them with the
+admin bypass, the issues created, the secrets to add in
 **Settings → Secrets → Actions** if evals are used (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`),
 and anything skipped or left for the user. Never merge the PR yourself.
