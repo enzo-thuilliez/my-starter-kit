@@ -26,23 +26,23 @@ It is opinionated and personal. It is public so you can fork it and swap in your
 ## How it fits together
 
 ```mermaid
-flowchart LR
-    subgraph machine["Machine — once (install.sh)"]
-        plugins["Plugins<br/>workflow skills · Ponytail · Floorplan · kit"]
-        intel["Code graphs<br/>GitNexus · Graphify"]
-        mcp["MCP<br/>Context7 · Playwright"]
-        rules["~/.claude/CLAUDE.md<br/>global rules"]
+flowchart TB
+    subgraph machine["1 · Machine, once: install.sh"]
+        direction LR
+        plugins["Plugins"] ~~~ graphs["Code graphs"] ~~~ mcp["MCP servers"] ~~~ rules["Global rules"]
     end
-    subgraph repo["Repo — per project (/kit:kickoff)"]
-        tpl["Templates<br/>AGENTS.md · CI · tests · evals"]
-        docs["README · About · topics"]
-        index["Code-intel index"]
+    subgraph repo["2 · Repo, per project: /kit:kickoff"]
+        direction LR
+        tpl["Templates"] ~~~ docs["README + AGENTS"] ~~~ index["Graph index"] ~~~ gh["GitHub setup"]
     end
-    subgraph gh["GitHub — every change"]
-        issue["Issue"] --> branch["Branch"] --> pr["PR<br/>CI · title lint · secret scan"] --> squash["Squash merge"] --> release["release-please"]
+    subgraph flow["3 · Every change"]
+        direction LR
+        issue["Issue"] --> branch["Branch"] --> pr["PR + CI"] --> merge["Squash"] --> release["Release"]
     end
-    machine --> repo --> gh
+    machine --> repo --> flow
 ```
+
+<sub>Plugins: workflow skills, Ponytail, Floorplan, kit · Code graphs: GitNexus, Graphify · MCP: Context7, Playwright · CI on every PR: tests, `ci-pass`, PR-title lint, secret scan.</sub>
 
 ## What's inside
 
@@ -65,9 +65,11 @@ flowchart LR
 
 **Templates** (copied by `/kit:kickoff`):
 
-- `common` — `AGENTS.md` (+ `CLAUDE.md` → `@AGENTS.md`), issue forms (bug, feature, task),
-  PR template, labels, CODEOWNERS, Dependabot, CI for PR titles, release-please, gitleaks and
-  label sync, CONTRIBUTING, SECURITY, LICENSE, pre-commit.
+- `common` — `AGENTS.md` (+ `CLAUDE.md` → `@AGENTS.md`), `DECISIONS.md` (ADRs), issue forms
+  (bug, feature, task), PR template, `type:*` / `priority:*` / `area:*` labels, CODEOWNERS,
+  Dependabot, SHA-pinned workflows (PR-title lint, release-please, gitleaks, label sync),
+  `.claude/settings.json` (agents can't push `main`, force-push or merge), pre-commit with a
+  commit-msg hook, CONTRIBUTING, SECURITY, LICENSE.
 - `python` — uv, FastAPI, pydantic-settings, LiteLLM + Langfuse LLM layer, Ruff, mypy strict,
   pytest with coverage, promptfoo evals, Dockerfile, CI.
 - `typescript` — Next.js (App Router) overlay: Tailwind + shadcn/ui, Biome, Zod env validation,
@@ -117,7 +119,7 @@ Run it in an empty folder, an empty GitHub repo, or a repo that already has code
 6. Gets lint, types and tests **green**, installs pre-commit, runs `/kit:code-intel`.
 7. Opens the **bootstrap PR** — you review and merge it.
 8. Sets the **About and topics**, squash-only merges, branch auto-delete, labels, and
-   **branch protection** on `main` (CI, PR title and secret scan required).
+   **branch protection** on `main` (`ci-pass`, PR title and secret scan required).
 9. Creates a **v0.1 milestone** with one issue per feature.
 
 A Python project ends up like this:

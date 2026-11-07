@@ -4,7 +4,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    labels: [dependencies]
+    labels: ["type:deps"]
     commit-message:
       prefix: chore
       prefix-development: chore
@@ -15,7 +15,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    labels: [dependencies, ci]
+    labels: ["type:deps", "area:ci"]
     commit-message:
       prefix: ci
     groups:

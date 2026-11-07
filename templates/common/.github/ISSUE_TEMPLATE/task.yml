@@ -1,7 +1,7 @@
 name: Task
 description: A chore, refactor, docs or infra change with a clear checklist.
 title: "chore: "
-labels: [task]
+labels: ["type:chore"]
 body:
   - type: textarea
     id: goal

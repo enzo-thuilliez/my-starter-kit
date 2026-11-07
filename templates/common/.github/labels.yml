@@ -1,30 +1,52 @@
-- name: bug
-  color: d73a4a
-  description: Something is broken
-- name: enhancement
-  color: a2eeef
-  description: New feature or improvement
-- name: task
-  color: c5def5
-  description: Chore, refactor, docs or infra
-- name: documentation
-  color: 0075ca
-  description: Docs only
-- name: dependencies
-  color: 0366d6
+# type:* — exactly one per issue
+- name: "type:feat"
+  color: 1d76db
+  description: New capability
+- name: "type:fix"
+  color: 1d76db
+  description: Behaviour differs from the contract or docs
+- name: "type:docs"
+  color: 1d76db
+  description: Documentation only
+- name: "type:refactor"
+  color: 1d76db
+  description: Restructure without behaviour change
+- name: "type:perf"
+  color: 1d76db
+  description: Faster or lighter, same behaviour
+- name: "type:test"
+  color: 1d76db
+  description: Tests only
+- name: "type:chore"
+  color: 1d76db
+  description: Maintenance with no behaviour change
+- name: "type:ci"
+  color: 1d76db
+  description: CI workflows and repo automation
+- name: "type:deps"
+  color: 1d76db
   description: Dependency updates
-- name: ci
-  color: ededed
-  description: GitHub Actions and tooling
-- name: good first issue
+# priority:* — exactly one per issue
+- name: "priority:p0"
+  color: b60205
+  description: Blocks the current milestone
+- name: "priority:p1"
+  color: d93f0b
+  description: Needed for the milestone
+- name: "priority:p2"
+  color: fbca04
+  description: Nice to have, can slip
+# area:* — one or more per issue, project-specific (written by /kit:kickoff)
+- name: "area:docs"
+  color: 0e8a16
+  description: README, AGENTS, DECISIONS, ROADMAP
+- name: "area:ci"
+  color: 0e8a16
+  description: GitHub Actions, Dependabot, hooks
+# other
+- name: "good first issue"
   color: 7057ff
   description: Small and well scoped
-- name: help wanted
-  color: 008672
-  description: Extra attention is needed
-- name: blocked
-  color: b60205
+- name: "blocked"
+  color: 000000
   description: Waiting on something else
-- name: wontfix
-  color: ffffff
-  description: Will not be worked on
