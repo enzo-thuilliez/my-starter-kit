@@ -1,0 +1,13 @@
+{
+  "name": "kit",
+  "version": "0.1.0",
+  "description": "Bootstrap new repos (structure, README, CI, issues/PR flow) and pick the right code-intelligence tool per repo.",
+  "author": {
+    "name": "Enzo Thuilliez",
+    "url": "https://github.com/enzo-thuilliez"
+  },
+  "homepage": "https://github.com/enzo-thuilliez/my-starter-kit",
+  "repository": "https://github.com/enzo-thuilliez/my-starter-kit",
+  "license": "MIT",
+  "keywords": ["bootstrap", "scaffold", "github", "ci", "agents", "claude-code"]
+}

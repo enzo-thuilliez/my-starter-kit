@@ -1,0 +1,15 @@
+{
+  "name": "my-starter-kit",
+  "description": "Enzo's Claude Code toolbox: machine setup and repo bootstrap in one place.",
+  "owner": {
+    "name": "Enzo Thuilliez",
+    "url": "https://github.com/enzo-thuilliez"
+  },
+  "plugins": [
+    {
+      "name": "kit",
+      "source": "./",
+      "description": "Bootstrap new repos (structure, README, CI, issues/PR flow) and pick the right code-intelligence tool per repo."
+    }
+  ]
+}

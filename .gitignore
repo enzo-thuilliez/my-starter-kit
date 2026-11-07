@@ -1,0 +1,13 @@
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+node_modules/
+__pycache__/
+.venv/
+# local agent artifacts
+.gitnexus/
+graphify-out/
+floorplan/
+CLAUDE.local.md
