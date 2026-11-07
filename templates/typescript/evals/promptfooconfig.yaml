@@ -1,0 +1,16 @@
+# Run with: pnpm evals   (needs API keys in .env)
+description: "{{PROJECT_NAME}} evals"
+
+prompts:
+  - "Answer in one short sentence: {{question}}"
+
+providers:
+  - id: anthropic:messages:claude-sonnet-5-5
+    label: default-model
+
+tests:
+  - vars:
+      question: What is the capital of France?
+    assert:
+      - type: icontains
+        value: Paris
