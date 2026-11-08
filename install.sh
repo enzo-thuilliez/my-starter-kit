@@ -8,6 +8,7 @@
 set -euo pipefail
 
 REPO="enzo-thuilliez/my-starter-kit"
+GITLEAKS_VERSION="8.30.1"
 RAW="https://raw.githubusercontent.com/${REPO}/main"
 WORKFLOW="agent-skills"
 WITH_OMNIROUTE=0
@@ -181,7 +182,7 @@ step_code_intel() {
   else
     run npm install -g gitnexus
   fi
-  run gitnexus setup >/dev/null
+  run gitnexus setup >/dev/null 2>&1
   ok "gitnexus MCP, skills and hooks configured"
 
   if has graphify; then
@@ -219,6 +220,25 @@ step_clis() {
     if has "$pkg"; then ok "$pkg"; else run npm install -g "$pkg"; fi
   done
   if has pre-commit; then ok "pre-commit"; else run uv tool install pre-commit; fi
+
+  # gitleaks for the pre-commit hook (gitleaks-system). The apt package is too old for
+  # `gitleaks git`, so install the official release binary into ~/.local/bin.
+  local gl_major_minor=""
+  has gitleaks && gl_major_minor="$(gitleaks version 2>/dev/null | sed -E 's/^v?([0-9]+\.[0-9]+).*/\1/')"
+  if [[ -n "$gl_major_minor" ]] && awk -v v="$gl_major_minor" 'BEGIN { split(v, a, "."); exit !(a[1] > 8 || (a[1] == 8 && a[2] >= 19)) }'; then
+    ok "gitleaks $(gitleaks version 2>/dev/null)"
+  else
+    local arch
+    case "$(uname -m)" in
+      x86_64)        arch=x64 ;;
+      aarch64|arm64) arch=arm64 ;;
+      *)             warn "No gitleaks build for $(uname -m); the gitleaks pre-commit hook will fail"; return 0 ;;
+    esac
+    info "Installing gitleaks $GITLEAKS_VERSION"
+    mkdir -p "$HOME/.local/bin"
+    run sh -c "curl -fsSL https://github.com/gitleaks/gitleaks/releases/download/v$GITLEAKS_VERSION/gitleaks_${GITLEAKS_VERSION}_linux_$arch.tar.gz | tar -xz -C '$HOME/.local/bin' gitleaks"
+    ok "gitleaks $GITLEAKS_VERSION"
+  fi
 }
 
 # ---------------------------------------------------------------- 6. global rules
