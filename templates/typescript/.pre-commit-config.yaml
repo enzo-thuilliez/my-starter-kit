@@ -17,7 +17,9 @@ repos:
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.28.0
     hooks:
-      - id: gitleaks
+      # Uses the gitleaks binary installed by my-starter-kit's install.sh (no Go toolchain needed).
+      - id: gitleaks-system
+        pass_filenames: false
   - repo: local
     hooks:
       - id: biome
