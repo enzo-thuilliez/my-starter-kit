@@ -1,6 +1,5 @@
 {
   "name": "kit",
-  "version": "0.1.0",
   "description": "Bootstrap new repos (structure, README, CI, issues/PR flow) and pick the right code-intelligence tool per repo.",
   "author": {
     "name": "Enzo Thuilliez",

@@ -113,15 +113,16 @@ Only want the skills? `claude plugin marketplace add enzo-thuilliez/my-starter-k
 Run it in an empty folder, an empty GitHub repo, or a repo that already has code.
 
 1. **Detects** where you start. Existing code is never overwritten (retrofit mode).
-2. **Interviews** you (10–15 questions: pitch, users, v0.1 features, stack, LLM, data, auth,
-   deploy, eval cases) and asks you to **confirm a spec** before touching anything.
+2. **Asks one question** (describe the project), then proposes the **whole spec with defaults**
+   (name, features, stack, LLM, data, auth, deploy, evals, visibility…). Reply `ok` or change a
+   few numbers; nothing is created before you say `go`.
 3. Opens a **"Bootstrap repository"** issue and a `chore/<n>-bootstrap` branch.
 4. **Applies the templates** and scaffolds the stack.
 5. Writes **AGENTS.md** for the project and a **selling README**.
 6. Gets lint, types and tests **green**, installs pre-commit, runs `/kit:code-intel`.
 7. Opens the **bootstrap PR** — you review and merge it.
 8. Sets the **About and topics**, squash-only merges, branch auto-delete, labels, and
-   **branch protection** on `main` (`ci-pass`, PR title and secret scan required).
+   **branch protection** on `main` (skipped for private repos on a free plan, which GitHub doesn't allow) (`ci-pass`, PR title and secret scan required).
 9. Creates a **v0.1 milestone** with one issue per feature.
 10. Leaves **releases off**: a "first release" issue explains how to turn them on
     (`gh variable set RELEASES_ENABLED --body true`) once the project actually works.
