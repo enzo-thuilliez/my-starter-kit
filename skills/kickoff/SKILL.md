@@ -190,7 +190,12 @@ gh api -X PATCH repos/OWNER/REPO \
 # e.g. area:backend, area:frontend, area:agents), then for each entry:
 gh api repos/OWNER/REPO/labels -f name=NAME -f color=COLOR -f description=DESC  # 422 = exists, fine
 
-# Branch protection on main: PR required, CI green, linear history, no force-push
+# Branch protection on main: PR required, CI green, linear history, no force-push.
+# Retrofit: first check `gh api repos/OWNER/REPO/rulesets`. If a ruleset already targets
+# main, add the missing checks to that ruleset (GET it by id, add entries to its
+# required_status_checks rule, PUT it back) and make sure the owner is in its bypass list
+# (`bypass_actors`: {"actor_type": "RepositoryRole", "actor_id": 5, "bypass_mode": "always"});
+# do not add classic protection on top. Otherwise use classic protection:
 gh api -X PUT repos/OWNER/REPO/branches/main/protection --input - <<'JSON'
 {
   "required_status_checks": { "strict": true, "contexts": ["ci-pass", "conventional", "gitleaks"] },
@@ -208,6 +213,12 @@ Some sandboxed environments refuse repository-settings writes (HTTP 403 "not per
 through this proxy"). Then do not retry: give the user these commands as one block to run
 in their own terminal, and say which ones are pending.
 
+A check added by name before it ever ran is fine through the API, but the GitHub UI only
+offers checks it has seen run once; tell the user if they will add one by hand. The
+`conventional` check runs on `pull_request_target`, which GitHub does not trigger for PRs
+opened by the Actions bot: release PRs need the owner's bypass (classic protection with
+`enforce_admins: false`, or the ruleset bypass list).
+
 Status check names are job names: `ci-pass` (the aggregator at the end of ci.yml, green only
 when every CI job is), `conventional` (pr-title.yml) and `gitleaks` (secrets.yml). New CI jobs
 only need adding to `ci-pass`'s `needs`, never to the protection. Reviews are not required:
@@ -222,15 +233,18 @@ the user merges their own PRs.
 - Write `ROADMAP.md`: a short "Done" list and a numbered "Next" list where each step names its
   milestone and links its issues. Keep it in sync with the milestones.
 - One Task issue for the README screenshot once the first UI exists, if relevant.
-- One Task issue **"chore: remove release-as after v0.1.0"**: the templates pin the first
-  release to v0.1.0 with `release-as` in `release-please-config.json`; once that release is
-  out the key must go, or every later release would also be 0.1.0.
+- One Task issue **"chore: first release"**, labelled `type:chore` + `priority:p2`, no
+  milestone. Releases are off by default: the Release workflow only runs once the repository
+  variable `RELEASES_ENABLED` is `true`. Its checklist: (1) the project does something useful
+  end to end; (2) `gh variable set RELEASES_ENABLED --body true`; (3) merge the release PR
+  release-please opens (v0.1.0, pinned by `release-as`); (4) remove `release-as` from
+  `release-please-config.json` in a follow-up PR, or every later release stays 0.1.0.
+  Never enable releases during kickoff.
 
 ## 11. Report
 
-Finish with: the PR link (to review and merge), a note that release PRs opened by
-release-please do not trigger CI on their own (GitHub blocks workflows started by the
-built-in token), so the user approves the runs in the Actions tab or merges them with the
-admin bypass, the issues created, the secrets to add in
+Finish with: the PR link (to review and merge), a note that releases are off until the
+"first release" issue is done (and that release PRs then need the admin bypass, since
+GitHub does not run all checks on PRs opened by the Actions bot), the issues created, the secrets to add in
 **Settings → Secrets → Actions** if evals are used (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`),
 and anything skipped or left for the user. Never merge the PR yourself.
