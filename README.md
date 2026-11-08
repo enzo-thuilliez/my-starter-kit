@@ -9,7 +9,7 @@ and one command turns an idea into a repository that is ready for agent-driven w
 
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757?style=flat-square)](https://code.claude.com/docs)
 [![License: MIT](https://img.shields.io/badge/license-MIT-111?style=flat-square)](LICENSE)
-![Stacks](https://img.shields.io/badge/templates-Python%20%7C%20Next.js-111?style=flat-square)
+![Stacks](https://img.shields.io/badge/templates-Python%20%7C%20Next.js%20%7C%20Rust-111?style=flat-square)
 
 [Why](#why) · [What's inside](#whats-inside) · [Install](#install) · [Kickoff](#kitkickoff) · [Code intel](#kitcode-intel) · [Fork it](#fork-and-customize)
 
@@ -74,7 +74,9 @@ flowchart TB
   pytest with coverage, promptfoo evals, Dockerfile, CI.
 - `typescript` — Next.js (App Router) overlay: Tailwind + shadcn/ui, Biome, Zod env validation,
   Vercel AI SDK (Anthropic + OpenAI) + Langfuse, Vitest, Playwright, promptfoo evals, CI with e2e.
-- Both together as a monorepo (`apps/api` + `apps/web`).
+- `rust` — edition 2024 CLI + library (clap, anyhow, thiserror, tracing), clippy pedantic
+  with `-D warnings`, rustfmt, cargo-deny (licences, advisories), integration test, CI.
+- Python and TypeScript together as a monorepo (`apps/api` + `apps/web`).
 
 ## Install
 

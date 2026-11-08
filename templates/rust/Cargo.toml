@@ -1,0 +1,35 @@
+[package]
+name = "{{PROJECT_NAME}}"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.85"
+description = "{{DESCRIPTION}}"
+license = "MIT"
+repository = "https://github.com/{{OWNER}}/{{PROJECT_NAME}}"
+readme = "README.md"
+publish = false
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+thiserror = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+unwrap_used = "warn"
+expect_used = "warn"
+module_name_repetitions = "allow"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true

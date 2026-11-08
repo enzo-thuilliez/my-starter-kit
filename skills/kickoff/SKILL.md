@@ -16,7 +16,7 @@ The kit root is two directories above this `SKILL.md` (`<kit>/skills/kickoff/SKI
 
 - `<kit>/scripts/apply-template.sh` copies templates. Run it with `--help` once to see the rules.
 - `<kit>/templates/common/` goes into every repo.
-- `<kit>/templates/python/` and `<kit>/templates/typescript/` are the stacks. Read the stack's
+- `<kit>/templates/python/`, `<kit>/templates/typescript/` and `<kit>/templates/rust/` are the stacks. Read the stack's
   `_kit.md` before applying it: it has the scaffold commands, the AGENTS.md command table,
   and the monorepo adjustments.
 
@@ -49,7 +49,8 @@ Skip any question the repo or the conversation already answers. Cover:
 2. **Target user** and the problem they have today.
 3. **Core features for v0.1** (3–7). These become the first issues.
 4. **Out of scope** for v0.1.
-5. **Stack**: Python (FastAPI) / TypeScript (Next.js) / both as a monorepo (`apps/api` + `apps/web`).
+5. **Stack**: Python (FastAPI) / TypeScript (Next.js) / Rust (CLI or library) / Python + TypeScript
+   as a monorepo (`apps/api` + `apps/web`).
 6. **LLM usage**: none / single model / multi-provider; which providers (Anthropic, OpenAI).
 7. **Data**: database or storage needed? (Postgres, SQLite, Supabase, files, none)
 8. **Auth**: none / simple / provider (Clerk, Supabase Auth, NextAuth).
@@ -103,7 +104,8 @@ VARS=(--var PROJECT_NAME=<name> --var "DESCRIPTION=<pitch>" --var OWNER=<login> 
       --var "AUTHOR=<name>" --var YEAR=$(date +%Y))
 
 # single stack
-$KIT/scripts/apply-template.sh --target . --stack common --stack <python|typescript> "${VARS[@]}"
+$KIT/scripts/apply-template.sh --target . --stack common --stack <python|typescript|rust> "${VARS[@]}"
+# Rust also needs --var CRATE_NAME=<name with - replaced by _>
 # monorepo
 $KIT/scripts/apply-template.sh --target . --stack common \
   --subdir apps/api --stack python --subdir apps/web --stack typescript "${VARS[@]}"
