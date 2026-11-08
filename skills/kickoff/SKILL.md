@@ -1,6 +1,6 @@
 ---
 name: kickoff
-description: Bootstrap a GitHub repository the kit way — interview, structure, AGENTS.md, selling README, CI, issue/PR flow, branch protection, first issues and code-intel indexing. Use when the user runs /kit:kickoff, starts a new project or repo, or wants to retrofit an existing repo with the kit's conventions.
+description: Bootstrap a GitHub repository the kit way — a defaults-first spec, structure, AGENTS.md, selling README, CI, issue/PR flow, branch protection, first issues and code-intel indexing. Use when the user runs /kit:kickoff, starts a new project or repo, or wants to retrofit an existing repo with the kit's conventions.
 ---
 
 # Kickoff
@@ -40,30 +40,41 @@ ls -A
 In **retrofit** mode, first read the existing README, manifests (`pyproject.toml`, `package.json`),
 CI and folder layout, so your questions skip what the code already answers.
 
-## 2. Interview (10–15 questions)
+## 2. Defaults-first spec
 
-Ask with the question tool, four questions per round, options first and free text always possible.
-Skip any question the repo or the conversation already answers. Cover:
+Do not run a long questionnaire: multiple-choice rounds are bad at open answers and users
+abandon them. Instead:
 
-1. **Name** (kebab-case repo name) and **one-line pitch** (this becomes the GitHub About).
-2. **Target user** and the problem they have today.
-3. **Core features for v0.1** (3–7). These become the first issues.
-4. **Out of scope** for v0.1.
-5. **Stack**: Python (FastAPI) / TypeScript (Next.js) / Rust (CLI or library) / Python + TypeScript
-   as a monorepo (`apps/api` + `apps/web`).
-6. **LLM usage**: none / single model / multi-provider; which providers (Anthropic, OpenAI).
-7. **Data**: database or storage needed? (Postgres, SQLite, Supabase, files, none)
-8. **Auth**: none / simple / provider (Clerk, Supabase Auth, NextAuth).
-9. **Deployment target**: Vercel, Docker/VPS, Fly, Railway, none yet.
-10. **Evals**: what does a correct answer look like? Two or three example cases.
-11. **Visuals for the README**: screenshot or GIF later, logo or not.
-12. **Topics** for GitHub (suggest 5–8, let the user edit).
-13. Anything an agent would likely get wrong in this project (conventions, domain rules).
-14. **Admin bypass** on `main` protection: can the owner still push or merge past red checks
-    in an emergency (recommended), or do the rules apply to everyone?
+1. **One open question**, in plain text (not the question tool): "Describe the project in one
+   or two sentences: what it does and for whom." Skip it if the conversation or, in retrofit
+   mode, the README already says. Accept any language; everything written into the repo is
+   still English.
+2. **Propose the whole spec at once**, as a numbered list where every item has a default in
+   brackets, inferred from the description and the repo:
 
-Then write a **short spec** (pitch, user, v0.1 features, stack, LLM, data, auth, deploy, evals)
-and ask the user to confirm or edit it. Do not create anything before the spec is confirmed.
+   1. Name (kebab-case) and one-line pitch → GitHub About
+   2. Target user and their problem
+   3. v0.1 features (3–7) → one issue each
+   4. Out of scope for v0.1
+   5. Stack: Python (FastAPI) / TypeScript (Next.js) / Rust (CLI or library) / Python +
+      TypeScript monorepo (`apps/api` + `apps/web`)
+   6. LLM: none / one provider / several (Anthropic, OpenAI)
+   7. Data: none / SQLite / Postgres / Supabase / files
+   8. Auth: none / simple / provider (Clerk, Supabase Auth, NextAuth)
+   9. Deployment: Vercel / Docker / Fly / Railway / none yet
+   10. Evals: what a correct output looks like, with 2–3 example cases
+   11. README visuals: screenshot or GIF later, logo or not
+   12. GitHub topics (5–8)
+   13. Agent pitfalls: what an agent would likely get wrong (domain rules, secrets, conventions)
+   14. Visibility: public / private
+   15. Admin bypass on `main` protection: yes (recommended) / rules apply to everyone
+
+   Say: "Reply `ok`, or only the numbers you want to change (e.g. `1 tldr-paste, 14 private`)."
+3. Apply the changes and show the **final spec** as a compact table. Create nothing until the
+   user replies `go` (or equivalent).
+
+Ask a separate question only when something is genuinely ambiguous and has no sensible default.
+If the user is not there to answer, take the defaults and list them at the top of the report.
 
 ## 3. Pre-flight
 
@@ -82,7 +93,7 @@ Some environments block GitHub GraphQL. When a `gh issue create` / `gh pr create
 
 ## 4. Repository and first commit
 
-- **new**: `gh repo create <owner>/<name> --public --description "<pitch>"`, then clone it or
+- **new**: `gh repo create <owner>/<name> --<public|private> --description "<pitch>"` (item 14), then clone it or
   `git init && git remote add origin ...` in the current folder.
 - **new** and **empty**: commit a minimal `README.md` (title + pitch) and the license on `main`
   (`chore: initial commit`) and push. This is the only direct commit to `main`.
@@ -126,14 +137,14 @@ Then:
   package per app.
 - **Retrofit**: for every file the script reports as skipped, merge what is missing into the
   existing file by hand. Never rewrite the project's own code or config wholesale.
-- Remove the options the interview ruled out (no LLM → see "Options to drop" in `_kit.md`).
-- Add what the interview asked for that templates don't cover (database client, auth) only
+- Remove the options the spec ruled out (no LLM → see "Options to drop" in `_kit.md`).
+- Add what the spec asked for that templates don't cover (database client, auth) only
   as dependencies + one minimal wiring file with a test; the features themselves are issues.
 
 ## 7. Write the docs
 
 **DECISIONS.md** — write ADR-001 for the stack choice (and one per other real trade-off the
-interview surfaced).
+spec surfaced).
 
 **AGENTS.md** — fill every `<!-- kickoff ... -->` marker: project summary, stack, the command
 table from `_kit.md`, folder map, conventions (including the user's answer to question 13).
@@ -192,6 +203,9 @@ gh api -X PATCH repos/OWNER/REPO \
 # e.g. area:backend, area:frontend, area:agents), then for each entry:
 gh api repos/OWNER/REPO/labels -f name=NAME -f color=COLOR -f description=DESC  # 422 = exists, fine
 
+# Private repo on a free plan: GitHub offers neither branch protection nor rulesets.
+# Check `gh api users/OWNER --jq .plan.name` (or the org plan); if it is "free" and the repo
+# is private, skip this block and say so in the report. Everything else still applies.
 # Branch protection on main: PR required, CI green, linear history, no force-push.
 # Retrofit: first check `gh api repos/OWNER/REPO/rulesets`. If a ruleset already targets
 # main, add the missing checks to that ruleset (GET it by id, add entries to its
