@@ -113,9 +113,9 @@ Only want the skills? `claude plugin marketplace add enzo-thuilliez/my-starter-k
 Run it in an empty folder, an empty GitHub repo, or a repo that already has code.
 
 1. **Detects** where you start. Existing code is never overwritten (retrofit mode).
-2. **Asks one question** (describe the project), then proposes the **whole spec with defaults**
-   (name, features, stack, LLM, data, auth, deploy, evals, visibility…). Reply `ok` or change a
-   few numbers; nothing is created before you say `go`.
+2. **Asks one sentence**, then **two rounds of pre-filled questions** (name, features, stack,
+   LLM, deploy, visibility, evals, admin bypass) and shows the **spec**; nothing is created
+   before you say `go`.
 3. Opens a **"Bootstrap repository"** issue and a `chore/<n>-bootstrap` branch.
 4. **Applies the templates** and scaffolds the stack.
 5. Writes **AGENTS.md** for the project and a **selling README**.

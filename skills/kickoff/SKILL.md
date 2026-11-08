@@ -1,6 +1,6 @@
 ---
 name: kickoff
-description: Bootstrap a GitHub repository the kit way — a defaults-first spec, structure, AGENTS.md, selling README, CI, issue/PR flow, branch protection, first issues and code-intel indexing. Use when the user runs /kit:kickoff, starts a new project or repo, or wants to retrofit an existing repo with the kit's conventions.
+description: Bootstrap a GitHub repository the kit way — a short clickable interview, structure, AGENTS.md, selling README, CI, issue/PR flow, branch protection, first issues and code-intel indexing. Use when the user runs /kit:kickoff, starts a new project or repo, or wants to retrofit an existing repo with the kit's conventions.
 ---
 
 # Kickoff
@@ -40,41 +40,44 @@ ls -A
 In **retrofit** mode, first read the existing README, manifests (`pyproject.toml`, `package.json`),
 CI and folder layout, so your questions skip what the code already answers.
 
-## 2. Defaults-first spec
+## 2. Interview: one sentence, two rounds of buttons, one spec
 
-Do not run a long questionnaire: multiple-choice rounds are bad at open answers and users
-abandon them. Instead:
+Keep it short and clickable. Never ask an open question through the question tool, and never
+dump a long list of items as text: both failed in real runs.
 
-1. **One open question**, in plain text (not the question tool): "Describe the project in one
+1. **One open question, in plain text** (not the question tool): "Describe the project in one
    or two sentences: what it does and for whom." Skip it if the conversation or, in retrofit
    mode, the README already says. Accept any language; everything written into the repo is
    still English.
-2. **Propose the whole spec at once**, as a numbered list where every item has a default in
-   brackets, inferred from the description and the repo:
 
-   1. Name (kebab-case) and one-line pitch → GitHub About
-   2. Target user and their problem
-   3. v0.1 features (3–7) → one issue each
-   4. Out of scope for v0.1
-   5. Stack: Python (FastAPI) / TypeScript (Next.js) / Rust (CLI or library) / Python +
-      TypeScript monorepo (`apps/api` + `apps/web`)
-   6. LLM: none / one provider / several (Anthropic, OpenAI)
-   7. Data: none / SQLite / Postgres / Supabase / files
-   8. Auth: none / simple / provider (Clerk, Supabase Auth, NextAuth)
-   9. Deployment: Vercel / Docker / Fly / Railway / none yet
-   10. Evals: what a correct output looks like, with 2–3 example cases
-   11. README visuals: screenshot or GIF later, logo or not
-   12. GitHub topics (5–8)
-   13. Agent pitfalls: what an agent would likely get wrong (domain rules, secrets, conventions)
-   14. Visibility: public / private
-   15. Admin bypass on `main` protection: yes (recommended) / rules apply to everyone
+2. **Round 1 — question tool, four questions.** Infer every option from the description. The
+   first option of each question is your best guess, labelled `(Recommended)`; the user can
+   always type their own answer.
+   - **Name**: three kebab-case names, each with its one-line pitch in the description.
+   - **v0.1 features** (`multiSelect`): the 3–4 features most likely needed, all meant to be
+     ticked; the user unticks or adds via Other.
+   - **Stack**: Python (FastAPI) / TypeScript (Next.js) / Rust (CLI or library) / Python +
+     TypeScript monorepo. Pre-select from the description.
+   - **LLM**: the concrete choice (e.g. "Anthropic, claude-sonnet-5-5") / several providers /
+     none.
 
-   Say: "Reply `ok`, or only the numbers you want to change (e.g. `1 tldr-paste, 14 private`)."
-3. Apply the changes and show the **final spec** as a compact table. Create nothing until the
-   user replies `go` (or equivalent).
+3. **Round 2 — question tool, four questions.**
+   - **Deployment**: the likely target first (Vercel for Next.js, Docker for APIs, none for CLIs).
+   - **Visibility**: public (Recommended) / private.
+   - **Evals**: "These cases: …" with 2–3 inferred cases in the description / "Later" / "None".
+   - **Admin bypass** on `main` protection: yes (Recommended) / rules apply to everyone.
+   Replace a question by a more useful one when the description leaves something genuinely
+   ambiguous (data store, auth provider), and infer the one you dropped.
 
-Ask a separate question only when something is genuinely ambiguous and has no sensible default.
-If the user is not there to answer, take the defaults and list them at the top of the report.
+4. **Infer the rest without asking**: target user, out of scope, data, auth, README visuals,
+   5–8 GitHub topics, and agent pitfalls (secrets, model ids, what tests must mock).
+
+5. **Final spec** as a compact two-column table (keep cells short so it renders in a terminal),
+   then: "Reply `go` to create everything, or tell me what to change." Create nothing before
+   `go`.
+
+If the user is not there to answer, take the recommended options and list them at the top of
+the report.
 
 ## 3. Pre-flight
 
@@ -93,7 +96,7 @@ Some environments block GitHub GraphQL. When a `gh issue create` / `gh pr create
 
 ## 4. Repository and first commit
 
-- **new**: `gh repo create <owner>/<name> --<public|private> --description "<pitch>"` (item 14), then clone it or
+- **new**: `gh repo create <owner>/<name> --<public|private> --description "<pitch>"` (visibility answer), then clone it or
   `git init && git remote add origin ...` in the current folder.
 - **new** and **empty**: commit a minimal `README.md` (title + pitch) and the license on `main`
   (`chore: initial commit`) and push. This is the only direct commit to `main`.
