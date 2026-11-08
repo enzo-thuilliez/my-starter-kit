@@ -123,6 +123,8 @@ Run it in an empty folder, an empty GitHub repo, or a repo that already has code
 8. Sets the **About and topics**, squash-only merges, branch auto-delete, labels, and
    **branch protection** on `main` (`ci-pass`, PR title and secret scan required).
 9. Creates a **v0.1 milestone** with one issue per feature.
+10. Leaves **releases off**: a "first release" issue explains how to turn them on
+    (`gh variable set RELEASES_ENABLED --body true`) once the project actually works.
 
 A Python project ends up like this:
 
