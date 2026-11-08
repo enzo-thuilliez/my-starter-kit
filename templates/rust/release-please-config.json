@@ -1,0 +1,10 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "rust",
+      "package-name": "{{PROJECT_NAME}}",
+      "release-as": "0.1.0",
+      "include-component-in-tag": false
+    }
+  }
+}
