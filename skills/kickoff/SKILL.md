@@ -98,8 +98,11 @@ Some environments block GitHub GraphQL. When a `gh issue create` / `gh pr create
 
 - **new**: `gh repo create <owner>/<name> --<public|private> --description "<pitch>"` (visibility answer), then clone it or
   `git init && git remote add origin ...` in the current folder.
-- **new** and **empty**: commit a minimal `README.md` (title + pitch) and the license on `main`
-  (`chore: initial commit`) and push. This is the only direct commit to `main`.
+- **new** and **empty**: commit a minimal `README.md` (title + pitch), the license and
+  `.github/workflows/pr-title.yml` from `templates/common` on `main` (`chore: initial commit`)
+  and push. This is the only direct commit to `main`. The PR-title check runs on
+  `pull_request_target`, which uses the workflow on `main`: without it there, the required
+  `conventional` check never reports and the bootstrap PR stays blocked.
 - **retrofit**: nothing here.
 
 ## 5. Bootstrap issue and branch
@@ -155,7 +158,10 @@ Leave no marker and no `{{PLACEHOLDER}}` behind.
 
 **README.md** — selling, in this order:
 
-1. Title, one-line pitch, badges (CI, license, release).
+1. Centered header, the same in all repos: `<div align="center">`, `# Title`, the pitch in
+   bold, a badge row (CI, license, release once releases are on, one or two stack badges in
+   `style=flat-square&color=111`), a nav line of anchor links, `</div>`. Then a one-line
+   `> **Status:** …` quote.
 2. Screenshot/GIF placeholder line (`<!-- screenshot: add after first UI -->`) if visual.
 3. **Why** — the problem, two or three sentences.
 4. **Features** — the v0.1 features, marked planned until built.
