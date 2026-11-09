@@ -11,7 +11,7 @@ and one command turns an idea into a repository that is ready for agent-driven w
 [![License: MIT](https://img.shields.io/badge/license-MIT-111?style=flat-square)](LICENSE)
 ![Stacks](https://img.shields.io/badge/templates-Python%20%7C%20Next.js%20%7C%20Rust-111?style=flat-square)
 
-[Why](#why) · [What's inside](#whats-inside) · [Install](#install) · [Kickoff](#kitkickoff) · [Code intel](#kitcode-intel) · [Fork it](#fork-and-customize)
+[Why](#why) · [What's inside](#whats-inside) · [Built with it](#built-with-this-kit) · [Install](#install) · [Kickoff](#kitkickoff) · [Code intel](#kitcode-intel) · [Fork it](#fork-and-customize)
 
 </div>
 
@@ -77,6 +77,20 @@ flowchart TB
 - `rust` — edition 2024 CLI + library (clap, anyhow, thiserror, tracing), clippy pedantic
   with `-D warnings`, rustfmt, cargo-deny (licences, advisories), integration test, CI.
 - Python and TypeScript together as a monorepo (`apps/api` + `apps/web`).
+
+## Built with this kit
+
+Four of my own repos follow the same templates, CI and issue → PR flow:
+
+| Repo | What it is | Stack | Specific to it |
+|---|---|---|---|
+| [rag-hive](https://github.com/enzo-thuilliez/rag-hive) | Multi-agent swarm that benchmarks RAG pipelines on your PDFs | Python · React | Releases off until the project works |
+| [pillbox](https://github.com/enzo-thuilliez/pillbox) | AI-assisted staff scheduling for pharmacies | TypeScript · Python | CI check that fails on any real name (denylist kept in a secret) |
+| [orderup](https://github.com/enzo-thuilliez/orderup) | Claude Code sessions as cooks in a 3D kitchen, `npx orderup-cli` | TypeScript · three.js | Keeps its own Changesets and npm release |
+| [etf-replication-engine](https://github.com/enzo-thuilliez/etf-replication-engine) | Rust optimizer for index replication, driven by an LLM agent over MCP | Rust · Python · React | Cargo workspace with shared clippy lints and cargo-deny |
+
+Each has the same `AGENTS.md` shape, `ci-pass` / PR-title / secret-scan checks, labels as code
+and a protected `main`, so an agent dropped into any of them already knows the rules.
 
 ## Install
 
