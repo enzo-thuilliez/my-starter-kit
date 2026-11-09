@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.2.0](https://github.com/enzo-thuilliez/my-starter-kit/compare/my-starter-kit-v0.1.0...my-starter-kit-v0.2.0) (2026-11-09)
+
+
+### Features
+
+* add Rust stack template ([#16](https://github.com/enzo-thuilliez/my-starter-kit/issues/16)) ([00e6d29](https://github.com/enzo-thuilliez/my-starter-kit/commit/00e6d296029644d5e0c67a2cd9398f406ea5dbc2))
+* backport rag-hive practices into the kit ([#11](https://github.com/enzo-thuilliez/my-starter-kit/issues/11)) ([bbeacc9](https://github.com/enzo-thuilliez/my-starter-kit/commit/bbeacc97b8247b7d5da01cc12f4c750b0f80abfa))
+* gate releases until the project works ([#15](https://github.com/enzo-thuilliez/my-starter-kit/issues/15)) ([ffd3a90](https://github.com/enzo-thuilliez/my-starter-kit/commit/ffd3a90cff25429215e911bbbef981fbe668c49e))
+* hybrid kickoff interview with pre-filled question buttons ([#22](https://github.com/enzo-thuilliez/my-starter-kit/issues/22)) ([77155a0](https://github.com/enzo-thuilliez/my-starter-kit/commit/77155a03aeb65e49ca9452cf53c85db96338b9b1))
+
+
+### Bug Fixes
+
+* bootstrap PR blocked by a check that cannot run ([#24](https://github.com/enzo-thuilliez/my-starter-kit/issues/24)) ([fea1a9f](https://github.com/enzo-thuilliez/my-starter-kit/commit/fea1a9feb5424cf1cff9f691e0a2943e4aabf37a))
+* kickoff issues found by the first real run ([#20](https://github.com/enzo-thuilliez/my-starter-kit/issues/20)) ([681bab6](https://github.com/enzo-thuilliez/my-starter-kit/commit/681bab6b0dd5dfe261e1059698fb3f540a7dff2b))
+* run the gitleaks hook from a binary instead of Go sources ([#18](https://github.com/enzo-thuilliez/my-starter-kit/issues/18)) ([629c91b](https://github.com/enzo-thuilliez/my-starter-kit/commit/629c91b902e18e2fa0a112fe67f508b66fd1be36))
+
 ## 0.1.0 (2026-11-07)
 
 
