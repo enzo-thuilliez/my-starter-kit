@@ -1,0 +1,71 @@
+# type:* — exactly one per issue
+- name: "type:feat"
+  color: 1d76db
+  description: New capability
+- name: "type:fix"
+  color: 1d76db
+  description: Behaviour differs from the contract or docs
+- name: "type:docs"
+  color: 1d76db
+  description: Documentation only
+- name: "type:refactor"
+  color: 1d76db
+  description: Restructure without behaviour change
+- name: "type:perf"
+  color: 1d76db
+  description: Faster or lighter, same behaviour
+- name: "type:test"
+  color: 1d76db
+  description: Tests only
+- name: "type:chore"
+  color: 1d76db
+  description: Maintenance with no behaviour change
+- name: "type:ci"
+  color: 1d76db
+  description: CI workflows and repo automation
+- name: "type:deps"
+  color: 1d76db
+  description: Dependency updates
+# priority:* — exactly one per issue
+- name: "priority:p0"
+  color: b60205
+  description: Blocks the current milestone
+- name: "priority:p1"
+  color: d93f0b
+  description: Needed for the milestone
+- name: "priority:p2"
+  color: fbca04
+  description: Nice to have, can slip
+# area:* — one or more per issue
+- name: "area:install"
+  color: 0e8a16
+  description: install.sh and machine setup
+- name: "area:kickoff"
+  color: 0e8a16
+  description: The /kit:kickoff skill
+- name: "area:code-intel"
+  color: 0e8a16
+  description: The /kit:code-intel skill
+- name: "area:templates"
+  color: 0e8a16
+  description: Files under templates/
+- name: "area:docs"
+  color: 0e8a16
+  description: README, AGENTS, global rules
+- name: "area:ci"
+  color: 0e8a16
+  description: GitHub Actions, Dependabot, hooks
+# other
+- name: "good first issue"
+  color: 7057ff
+  description: Small and well scoped
+- name: "blocked"
+  color: 000000
+  description: Waiting on something else
+# release-please bookkeeping: listed so the label sync never deletes them
+- name: "autorelease: pending"
+  color: ededed
+  description: Release PR waiting to be merged
+- name: "autorelease: tagged"
+  color: ededed
+  description: Release PR merged and tagged
