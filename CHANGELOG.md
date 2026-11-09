@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/enzo-thuilliez/my-starter-kit/compare/my-starter-kit-v0.2.0...my-starter-kit-v0.2.1) (2026-11-09)
+
+
+### Bug Fixes
+
+* **templates:** let cargo-deny accept path dependencies in rust workspaces ([#29](https://github.com/enzo-thuilliez/my-starter-kit/issues/29)) ([f4e8e99](https://github.com/enzo-thuilliez/my-starter-kit/commit/f4e8e992473aa7dcec4c2a5f51b1a54269daf71f))
+
 ## [0.2.0](https://github.com/enzo-thuilliez/my-starter-kit/compare/my-starter-kit-v0.1.0...my-starter-kit-v0.2.0) (2026-11-09)
 
 
