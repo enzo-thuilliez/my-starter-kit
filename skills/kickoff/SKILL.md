@@ -288,5 +288,6 @@ Finish with: the PR link (to review and merge), a note that releases are off unt
 "first release" issue is done (and that release PRs then need the admin bypass, since
 GitHub does not run all checks on PRs opened by the Actions bot), the issues created, the secrets to add in
 **Settings → Secrets → Actions** if evals are used (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`),
-the skills and MCP servers installed (with any variable they need in `.env`), and anything
-skipped or left for the user. Never merge the PR yourself.
+the skills and MCP servers installed (with any variable they need in `.env`), how to turn on
+the optional agent review (`AGENT_REVIEW_ENABLED=true` variable plus an `ANTHROPIC_API_KEY`
+secret, see `.github/workflows/agent-review.yml`), and anything skipped or left for the user. Never merge the PR yourself.
