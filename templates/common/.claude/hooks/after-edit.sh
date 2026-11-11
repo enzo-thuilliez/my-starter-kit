@@ -36,6 +36,20 @@ find_bin() {
   return 1
 }
 
+# Rust edition: first literal `edition = "NNNN"` found in a Cargo.toml walking up from the
+# file (a member crate with `edition.workspace = true` falls through to the workspace root).
+rust_edition() {
+  local dir e; dir="$(dirname "$file")"
+  while [[ "$dir" != / ]]; do
+    if [[ -f "$dir/Cargo.toml" ]]; then
+      e="$(sed -nE 's/^[[:space:]]*edition[[:space:]]*=[[:space:]]*"([0-9]{4})".*/\1/p' "$dir/Cargo.toml" | head -n1)"
+      [[ -n "$e" ]] && { echo "$e"; return 0; }
+    fi
+    dir="$(dirname "$dir")"
+  done
+  echo 2024
+}
+
 report=""
 run() { # <label> <command...>: record the output when the command fails
   local out
@@ -62,16 +76,25 @@ case "$file" in
   *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs|*.json|*.css)
     if root="$(root_with package.json)"; then
       cd "$root" || exit 0
-      [[ -x node_modules/.bin/biome ]] && run "biome" node_modules/.bin/biome check --write "$file"
-      if [[ "$file" == *.ts* && "$file" != */e2e/* ]] && vitest="$(find_bin vitest)"; then
-        run "vitest" "$vitest" related --run --passWithNoTests "$file"
+      if bin="$(find_bin biome)"; then
+        run "biome" "$bin" check --write "$file"
+      else
+        # No Biome: ESLint (code files only) then Prettier, when the project has them.
+        case "$file" in
+          *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs)
+            bin="$(find_bin eslint)" && run "eslint" "$bin" --fix "$file" ;;
+        esac
+        bin="$(find_bin prettier)" && run "prettier" "$bin" --write "$file"
+      fi
+      if [[ "$file" == *.ts* && "$file" != */e2e/* ]] && bin="$(find_bin vitest)"; then
+        run "vitest" "$bin" related --run --passWithNoTests "$file"
       fi
     fi
     ;;
   *.rs)
     if root="$(root_with Cargo.toml)" && command -v cargo >/dev/null 2>&1; then
       cd "$root" || exit 0
-      run "rustfmt" rustfmt --edition 2024 "$file"
+      run "rustfmt" rustfmt --edition "$(rust_edition)" "$file"
       run "clippy" cargo clippy --quiet --all-targets -- -D warnings
     fi
     ;;
