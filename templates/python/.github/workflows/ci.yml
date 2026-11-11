@@ -31,6 +31,8 @@ jobs:
         run: uv run mypy
       - name: Tests
         run: uv run pytest
+      - name: README diagram matches the code
+        run: python3 "$GITHUB_WORKSPACE/.github/scripts/check-diagram.py" "$GITHUB_WORKSPACE/README.md"
 
   audit:
     runs-on: ubuntu-latest
