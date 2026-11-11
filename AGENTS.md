@@ -11,7 +11,8 @@ Instructions for AI coding agents working **on this repository** (the kit itself
 - `global/CLAUDE.md` — cross-project rules installed into `~/.claude/CLAUDE.md`.
 - `skills/` — plugin skills (`/kit:kickoff`, `/kit:code-intel`).
 - `templates/common/` — files copied into every new repo.
-- `templates/<stack>/` — stack-specific files (`python`, `typescript`, `rust`).
+- `templates/<stack>/` — stack-specific files (`python`, `typescript`, `rust`), plus the
+  opt-in `privacy` overlay for projects that handle real data.
 
 ## Rules
 
@@ -27,5 +28,5 @@ Instructions for AI coding agents working **on this repository** (the kit itself
 
 ```bash
 claude plugin validate .
-shellcheck install.sh scripts/*.sh templates/common/.claude/hooks/*.sh templates/common/.devcontainer/*.sh
+shellcheck install.sh scripts/*.sh templates/common/.claude/hooks/*.sh templates/common/.devcontainer/*.sh templates/privacy/scripts/*.sh
 ```
