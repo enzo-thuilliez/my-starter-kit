@@ -25,6 +25,17 @@ root_with() {
   return 1
 }
 
+# node_modules/.bin/<name> from the current directory or the nearest ancestor that has it
+# (npm/pnpm workspaces hoist tools to the workspace root).
+find_bin() {
+  local dir="$PWD"
+  while [[ "$dir" != / ]]; do
+    [[ -x "$dir/node_modules/.bin/$1" ]] && { echo "$dir/node_modules/.bin/$1"; return 0; }
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
+
 report=""
 run() { # <label> <command...>: record the output when the command fails
   local out
@@ -52,8 +63,8 @@ case "$file" in
     if root="$(root_with package.json)"; then
       cd "$root" || exit 0
       [[ -x node_modules/.bin/biome ]] && run "biome" node_modules/.bin/biome check --write "$file"
-      if [[ -x node_modules/.bin/vitest && "$file" == *.ts* && "$file" != */e2e/* ]]; then
-        run "vitest" node_modules/.bin/vitest related --run --passWithNoTests "$file"
+      if [[ "$file" == *.ts* && "$file" != */e2e/* ]] && vitest="$(find_bin vitest)"; then
+        run "vitest" "$vitest" related --run --passWithNoTests "$file"
       fi
     fi
     ;;
