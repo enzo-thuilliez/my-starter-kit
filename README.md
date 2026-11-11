@@ -48,7 +48,7 @@ flowchart TB
 
 | Tool | What it does here | Level |
 |---|---|---|
-| **kit** (this plugin) | `/kit:kickoff` and `/kit:code-intel` | Global |
+| **kit** (this plugin) | `/kit:kickoff` (new repo, with vetted skill and MCP suggestions from skills.sh and the MCP registry), `/kit:audit` (check a repo against the conventions), `/kit:sync` (port template updates to existing repos), `/kit:code-intel` | Global |
 | [agent-skills](https://github.com/addyosmani/agent-skills) *or* [ECC](https://github.com/affaan-m/ECC) | Engineering workflow skills (spec → plan → test → review → ship). Pick one with `--workflow` | Global |
 | [Ponytail](https://github.com/DietrichGebert/ponytail) | Makes the agent write the least code that does the job | Global |
 | [Floorplan](https://github.com/haydenschmitty/floorplan) | Human-readable map of an app's architecture, on demand | Global |
@@ -67,16 +67,26 @@ flowchart TB
 
 - `common` — `AGENTS.md` (+ `CLAUDE.md` → `@AGENTS.md`), `DECISIONS.md` (ADRs), issue forms
   (bug, feature, task), PR template, `type:*` / `priority:*` / `area:*` labels, CODEOWNERS,
-  Dependabot, SHA-pinned workflows (PR-title lint, release-please, gitleaks, label sync),
-  `.claude/settings.json` (agents can't push `main`, force-push or merge), pre-commit with a
-  commit-msg hook, CONTRIBUTING, SECURITY, LICENSE.
-- `python` — uv, FastAPI, pydantic-settings, LiteLLM + Langfuse LLM layer, Ruff, mypy strict,
-  pytest with coverage, promptfoo evals, Dockerfile, CI.
+  Dependabot, SHA-pinned workflows (PR-title lint, release-please, gitleaks, label sync, an
+  opt-in agent PR review driven by `AGENTS.md`), `.claude/settings.json` (agents can't push
+  `main`, force-push or merge) with Claude Code hooks (block `.env` and keys; lint and run the
+  related tests after each edit), a dev container, a CI check that the README diagram still
+  matches the code, pre-commit with a commit-msg hook, CONTRIBUTING, SECURITY, LICENSE.
+- `python` — uv, FastAPI, pydantic-settings, LiteLLM + Langfuse LLM layer (hosted or local via
+  Ollama), versioned prompt files, a runtime guardrail that blocks numbers not found in the
+  input data, committed OpenAPI schema, Ruff, mypy strict, pytest with coverage, Hypothesis
+  property tests, recorded LLM calls (VCR), pip-audit, promptfoo evals gated against `main` with
+  a cost budget, a prompt-injection red-team suite, Dockerfile, CI.
 - `typescript` — Next.js (App Router) overlay: Tailwind + shadcn/ui, Biome, Zod env validation,
-  Vercel AI SDK (Anthropic + OpenAI) + Langfuse, Vitest, Playwright, promptfoo evals, CI with e2e.
+  Vercel AI SDK (Anthropic, OpenAI, local Ollama) + Langfuse, versioned prompt files, Vitest,
+  Playwright, pnpm audit, promptfoo evals gated against `main`, red-team suite, CI with e2e.
+  In a monorepo, API types are generated from the committed OpenAPI schema.
 - `rust` — edition 2024 CLI + library (clap, anyhow, thiserror, tracing), clippy pedantic
   with `-D warnings`, rustfmt, cargo-deny (licences, advisories), integration test, CI.
 - Python and TypeScript together as a monorepo (`apps/api` + `apps/web`).
+- `privacy` — opt-in overlay for projects with real data: a CI check that fails on any term
+  from a secret denylist (never printed), `private/` ignored, AGENTS.md rules and ADRs for
+  pseudonymizing outbound calls.
 
 ## Built with this kit
 
