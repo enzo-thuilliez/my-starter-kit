@@ -25,6 +25,17 @@ root_with() {
   return 1
 }
 
+# node_modules/.bin/<name> from the current directory or the nearest ancestor that has it
+# (npm/pnpm workspaces hoist tools to the workspace root).
+find_bin() {
+  local dir="$PWD"
+  while [[ "$dir" != / ]]; do
+    [[ -x "$dir/node_modules/.bin/$1" ]] && { echo "$dir/node_modules/.bin/$1"; return 0; }
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
+
 # Rust edition: first literal `edition = "NNNN"` found in a Cargo.toml walking up from the
 # file (a member crate with `edition.workspace = true` falls through to the workspace root).
 rust_edition() {
@@ -65,18 +76,18 @@ case "$file" in
   *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs|*.json|*.css)
     if root="$(root_with package.json)"; then
       cd "$root" || exit 0
-      if [[ -x node_modules/.bin/biome ]]; then
-        run "biome" node_modules/.bin/biome check --write "$file"
+      if bin="$(find_bin biome)"; then
+        run "biome" "$bin" check --write "$file"
       else
         # No Biome: ESLint (code files only) then Prettier, when the project has them.
         case "$file" in
           *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs)
-            [[ -x node_modules/.bin/eslint ]] && run "eslint" node_modules/.bin/eslint --fix "$file" ;;
+            bin="$(find_bin eslint)" && run "eslint" "$bin" --fix "$file" ;;
         esac
-        [[ -x node_modules/.bin/prettier ]] && run "prettier" node_modules/.bin/prettier --write "$file"
+        bin="$(find_bin prettier)" && run "prettier" "$bin" --write "$file"
       fi
-      if [[ -x node_modules/.bin/vitest && "$file" == *.ts* && "$file" != */e2e/* ]]; then
-        run "vitest" node_modules/.bin/vitest related --run --passWithNoTests "$file"
+      if [[ "$file" == *.ts* && "$file" != */e2e/* ]] && bin="$(find_bin vitest)"; then
+        run "vitest" "$bin" related --run --passWithNoTests "$file"
       fi
     fi
     ;;
