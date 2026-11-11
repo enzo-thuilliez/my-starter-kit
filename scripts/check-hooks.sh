@@ -24,6 +24,14 @@ expect 2 protect-secrets.sh "$(bash_json "cat .env | grep KEY")"   "blocks cat .
 expect 2 protect-secrets.sh "$(bash_json "cp key.pem /tmp")"       "blocks a private key in a command"
 expect 0 protect-secrets.sh "$(bash_json "uv run pytest -q")"      "allows ordinary commands"
 
+printf '# real data\nprivate/\n' > "$dir/.claude/protected-paths"
+expect 2 protect-secrets.sh "$(read_json "$dir/private/people.csv")"     "blocks a protected folder (file tool)"
+expect 2 protect-secrets.sh "$(bash_json "cat ./private/people.csv")"    "blocks a protected folder (shell)"
+expect 2 protect-secrets.sh "$(bash_json "head -n1 'private/x.csv'")"    "blocks a quoted protected path"
+expect 0 protect-secrets.sh "$(bash_json "cat privately/notes.md")"      "allows a path that only shares the prefix"
+rm "$dir/.claude/protected-paths"
+expect 0 protect-secrets.sh "$(bash_json "cat private/people.csv")"      "no protected-paths file, nothing extra blocked"
+
 expect 0 after-edit.sh "$(edit_json "$dir/src/app/llm.py")" "clean file passes"
 cp "$dir/src/app/config.py" "$dir/config.bak"
 printf '\nBROKEN = undefined_name\n' >> "$dir/src/app/config.py"
