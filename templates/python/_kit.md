@@ -36,6 +36,28 @@ Numbers from data: any answer the LLM builds from data goes through
 Derived figures (sums, ratios) are computed in code and passed in as data. The eval
 `evals/assert_numbers.py` applies the same check.
 
+Local-first profile (kickoff LLM answer "local-first"): no paid API at runtime.
+- `.env` / `.env.example`: `DEFAULT_MODEL=ollama_chat/qwen3:8b` (or any model pulled with
+  `ollama pull`); `OLLAMA_API_BASE` points at the server (`complete()` passes it to LiteLLM).
+- Embeddings, if needed: `litellm.embedding(model="ollama/nomic-embed-text", api_base=...)`
+  keeps everything on Ollama; `sentence-transformers` (e.g. BGE-M3) is the heavier in-process
+  option (`uv add sentence-transformers`, pulls PyTorch).
+- README quickstart: `ollama serve` and `ollama pull <model>` before `uv run`.
+- Evals still need a model: point `evals/provider.py`'s default at the same local model.
+- DECISIONS.md: add the ADR below.
+
+```markdown
+## ADR-002: Local-first, no paid API at runtime
+
+- **Status:** accepted
+- **Context:** {why: privacy, cost, offline use}.
+- **Decision:** the app calls models through Ollama (LLM) {and Ollama or
+  sentence-transformers (embeddings)}. No paid API is called at runtime; hosted models may be
+  used in development and evals only.
+- **Consequences:** answers depend on the local model's quality and the machine's hardware;
+  switching to a hosted model is a `DEFAULT_MODEL` change, not a code change.
+```
+
 Eval gate: `evals.yml` runs the promptfoo suite on PRs that touch the prompts, the LLM layer
 or the evals, compares it with the last run on `main` (kept as the `eval-baseline` artifact)
 and posts the result on the PR. It fails when the pass rate drops by more than `EVAL_MAX_DROP`

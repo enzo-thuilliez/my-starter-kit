@@ -1,11 +1,13 @@
 import { anthropic } from "@ai-sdk/anthropic";
 import { openai } from "@ai-sdk/openai";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { generateText, type LanguageModel } from "ai";
 import { env } from "@/env";
 
 /**
  * Single entry point for LLM calls. Models are written "provider:model-id",
- * e.g. "anthropic:claude-sonnet-5-5" or "openai:gpt-5.1".
+ * e.g. "anthropic:claude-sonnet-5-5", "openai:gpt-5.1", or "ollama:qwen3:8b" for a
+ * local model served by Ollama at OLLAMA_BASE_URL.
  */
 export function resolveModel(id: string = env().DEFAULT_MODEL): LanguageModel {
   const [provider, ...rest] = id.split(":");
@@ -17,6 +19,11 @@ export function resolveModel(id: string = env().DEFAULT_MODEL): LanguageModel {
       return anthropic(name);
     case "openai":
       return openai(name);
+    case "ollama":
+      return createOpenAICompatible({
+        name: "ollama",
+        baseURL: env().OLLAMA_BASE_URL,
+      })(name);
     default:
       throw new Error(`Unknown model provider "${provider}"`);
   }

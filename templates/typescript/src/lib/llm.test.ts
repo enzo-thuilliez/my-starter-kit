@@ -8,6 +8,11 @@ vi.mock("@ai-sdk/anthropic", () => ({
 vi.mock("@ai-sdk/openai", () => ({
   openai: (name: string) => ({ provider: "openai", name }),
 }));
+vi.mock("@ai-sdk/openai-compatible", () => ({
+  createOpenAICompatible:
+    ({ name, baseURL }: { name: string; baseURL: string }) =>
+    (model: string) => ({ provider: name, name: model, baseURL }),
+}));
 
 const { complete, resolveModel } = await import("./llm");
 
@@ -20,6 +25,14 @@ describe("resolveModel", () => {
     expect(resolveModel("anthropic:claude-sonnet-5-5")).toEqual({
       provider: "anthropic",
       name: "claude-sonnet-5-5",
+    });
+  });
+
+  it("sends local models to the Ollama server", () => {
+    expect(resolveModel("ollama:qwen3:8b")).toEqual({
+      provider: "ollama",
+      name: "qwen3:8b",
+      baseURL: "http://localhost:11434/v1",
     });
   });
 
