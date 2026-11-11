@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.3.0](https://github.com/enzo-thuilliez/my-starter-kit/compare/my-starter-kit-v0.2.1...my-starter-kit-v0.3.0) (2026-11-11)
+
+
+### Features
+
+* add /kit:audit to check a repo against the kit conventions ([#60](https://github.com/enzo-thuilliez/my-starter-kit/issues/60)) ([2f51b5f](https://github.com/enzo-thuilliez/my-starter-kit/commit/2f51b5fa44a359862ee45c25edb47de07635821d))
+* add /kit:sync to bring existing repos up to date with the templates ([#61](https://github.com/enzo-thuilliez/my-starter-kit/issues/61)) ([280e647](https://github.com/enzo-thuilliez/my-starter-kit/commit/280e6470cbd70f63258531a2237d081906351648))
+* draft the readme diagram from the code graph and check it in ci ([#63](https://github.com/enzo-thuilliez/my-starter-kit/issues/63)) ([507af39](https://github.com/enzo-thuilliez/my-starter-kit/commit/507af399691abccd0a2445d3fc3a01434b358957))
+* **kickoff:** suggest vetted skills and mcp servers from skills.sh and the mcp registry ([#59](https://github.com/enzo-thuilliez/my-starter-kit/issues/59)) ([856071e](https://github.com/enzo-thuilliez/my-starter-kit/commit/856071e6b6df6ddcd6176225abec2801045aaeee))
+* **templates:** add a dev container per stack ([#50](https://github.com/enzo-thuilliez/my-starter-kit/issues/50)) ([3a244e4](https://github.com/enzo-thuilliez/my-starter-kit/commit/3a244e430c66593c46e2fbd4aeda37f44d5af80d))
+* **templates:** add a local-first llm profile with ollama ([#57](https://github.com/enzo-thuilliez/my-starter-kit/issues/57)) ([5b5f263](https://github.com/enzo-thuilliez/my-starter-kit/commit/5b5f263e051e8507ec5a298cb05316bad1f060b3))
+* **templates:** add a prompt-injection red-team suite ([#55](https://github.com/enzo-thuilliez/my-starter-kit/issues/55)) ([d2e78bc](https://github.com/enzo-thuilliez/my-starter-kit/commit/d2e78bc7267c9c12dd9b5dfb1a5f0b2ee54c04fe))
+* **templates:** add a runtime guardrail for numbers in llm output ([#52](https://github.com/enzo-thuilliez/my-starter-kit/issues/52)) ([b213857](https://github.com/enzo-thuilliez/my-starter-kit/commit/b213857ba68c29f44461af620a98de093e3275ee))
+* **templates:** add an opt-in privacy overlay for projects with real data ([#58](https://github.com/enzo-thuilliez/my-starter-kit/issues/58)) ([9479a55](https://github.com/enzo-thuilliez/my-starter-kit/commit/9479a5530ed3a938f80bdb9eb93ef91f065e693d))
+* **templates:** add an optional agent pr review driven by agents.md ([#62](https://github.com/enzo-thuilliez/my-starter-kit/issues/62)) ([3ae1739](https://github.com/enzo-thuilliez/my-starter-kit/commit/3ae1739adcee572f6f24a12c69a791cb7f697371))
+* **templates:** add claude code hooks for secrets and post-edit checks ([#48](https://github.com/enzo-thuilliez/my-starter-kit/issues/48)) ([d8bad64](https://github.com/enzo-thuilliez/my-starter-kit/commit/d8bad641cc2a9d3eb8da150cdc5b08699f1bcf4d))
+* **templates:** add property-based tests and recorded llm calls ([#53](https://github.com/enzo-thuilliez/my-starter-kit/issues/53)) ([a6fc877](https://github.com/enzo-thuilliez/my-starter-kit/commit/a6fc87755a8acf5866c50f2ecef4e443407fa7a2))
+* **templates:** commit the openapi schema and generate typescript types from it ([#54](https://github.com/enzo-thuilliez/my-starter-kit/issues/54)) ([9728183](https://github.com/enzo-thuilliez/my-starter-kit/commit/97281836c990238ed4793c6199e005cdd4ed3e64))
+* **templates:** gate evals against main with a cost budget ([#56](https://github.com/enzo-thuilliez/my-starter-kit/issues/56)) ([d41ca0a](https://github.com/enzo-thuilliez/my-starter-kit/commit/d41ca0aa20af3bd40655b00ef1c74960c82e1519))
+* **templates:** keep prompts in versioned files evaluated by promptfoo ([#51](https://github.com/enzo-thuilliez/my-starter-kit/issues/51)) ([62d6de2](https://github.com/enzo-thuilliez/my-starter-kit/commit/62d6de2300613e681929f1694d06ca60b5c3bff5))
+* **templates:** scan dependencies for known vulnerabilities in ci ([#49](https://github.com/enzo-thuilliez/my-starter-kit/issues/49)) ([fdc1e06](https://github.com/enzo-thuilliez/my-starter-kit/commit/fdc1e061045596b62c06ec5ab0fb1428b5af2a85))
+
 ## [0.2.1](https://github.com/enzo-thuilliez/my-starter-kit/compare/my-starter-kit-v0.2.0...my-starter-kit-v0.2.1) (2026-11-09)
 
 
