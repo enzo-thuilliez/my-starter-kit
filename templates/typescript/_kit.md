@@ -15,7 +15,7 @@ cp -a --update=none kit-tmp-web/. ./ && rm -rf kit-tmp-web
 # 3. Allow the native builds pnpm blocks by default
 printf '  protobufjs: true\n  esbuild: true\n' >> pnpm-workspace.yaml   # under allowBuilds:
 # 4. Dependencies
-pnpm add ai @ai-sdk/anthropic @ai-sdk/openai zod \
+pnpm add ai @ai-sdk/anthropic @ai-sdk/openai @ai-sdk/openai-compatible zod \
   @langfuse/otel @langfuse/vercel-ai-sdk @opentelemetry/sdk-node
 pnpm add -D vitest vite-tsconfig-paths @playwright/test
 # 5. UI kit (non-interactive, default style)
@@ -49,6 +49,27 @@ Verify: `pnpm lint && pnpm typecheck && pnpm test && SKIP_ENV_VALIDATION=1 pnpm 
 Stack: Next.js (App Router, src/), React, TypeScript, pnpm, Tailwind + shadcn/ui, Biome,
 Vercel AI SDK (Anthropic + OpenAI), Zod env validation, Langfuse via OpenTelemetry,
 Vitest, Playwright, promptfoo.
+
+Local-first profile (kickoff LLM answer "local-first"): no paid API at runtime.
+- `.env` / `.env.example`: `DEFAULT_MODEL=ollama:qwen3:8b` (or any model pulled with
+  `ollama pull`); `OLLAMA_BASE_URL` points at Ollama's OpenAI-compatible endpoint (`.../v1`).
+- Embeddings, if needed: `embed()` from `ai` with the same OpenAI-compatible provider's
+  `textEmbeddingModel("nomic-embed-text")`.
+- README quickstart: `ollama serve` and `ollama pull <model>` before `pnpm dev`.
+- Evals still need a model: set the promptfoo provider to `ollama:chat:qwen3:8b`.
+- DECISIONS.md: add the ADR below.
+
+```markdown
+## ADR-002: Local-first, no paid API at runtime
+
+- **Status:** accepted
+- **Context:** {why: privacy, cost, offline use}.
+- **Decision:** the app calls models through Ollama (LLM) {and Ollama or
+  sentence-transformers (embeddings)}. No paid API is called at runtime; hosted models may be
+  used in development and evals only.
+- **Consequences:** answers depend on the local model's quality and the machine's hardware;
+  switching to a hosted model is a `DEFAULT_MODEL` change, not a code change.
+```
 
 Eval gate: `evals.yml` runs the promptfoo suite on PRs that touch the prompts, the LLM layer
 or the evals, compares it with the last run on `main` (kept as the `eval-baseline` artifact)

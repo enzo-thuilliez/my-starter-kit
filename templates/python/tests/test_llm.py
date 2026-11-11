@@ -18,3 +18,15 @@ def test_complete_sends_system_and_user_messages() -> None:
         {"role": "system", "content": "be brief"},
         {"role": "user", "content": "hello"},
     ]
+
+
+def test_local_models_go_to_the_ollama_server() -> None:
+    with patch("app.llm.litellm.completion", return_value=_fake_response("ok")) as fake:
+        complete("hello", model="ollama_chat/qwen3:8b")
+    assert fake.call_args.kwargs["api_base"] == "http://localhost:11434"
+
+
+def test_hosted_models_get_no_api_base() -> None:
+    with patch("app.llm.litellm.completion", return_value=_fake_response("ok")) as fake:
+        complete("hello", model="anthropic/claude-sonnet-5-5")
+    assert "api_base" not in fake.call_args.kwargs

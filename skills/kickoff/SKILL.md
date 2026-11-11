@@ -59,7 +59,8 @@ dump a long list of items as text: both failed in real runs.
    - **Stack**: Python (FastAPI) / TypeScript (Next.js) / Rust (CLI or library) / Python +
      TypeScript monorepo. Pre-select from the description.
    - **LLM**: the concrete choice (e.g. "Anthropic, claude-sonnet-5-5") / several providers /
-     none.
+     local-first (Ollama, no paid API at runtime) / none. Recommend local-first when the
+     description stresses privacy, offline use or zero running cost.
 
 3. **Round 2 — question tool, four questions.**
    - **Deployment**: the likely target first (Vercel for Next.js, Docker for APIs, none for CLIs).
@@ -144,6 +145,8 @@ Then:
 - **Retrofit**: for every file the script reports as skipped, merge what is missing into the
   existing file by hand. Never rewrite the project's own code or config wholesale.
 - Remove the options the spec ruled out (no LLM → see "Options to drop" in `_kit.md`).
+- Local-first LLM → apply "Local-first profile" from `_kit.md` (model ids, `.env.example`,
+  quickstart, and its ADR in DECISIONS.md).
 - Add what the spec asked for that templates don't cover (database client, auth) only
   as dependencies + one minimal wiring file with a test; the features themselves are issues.
 

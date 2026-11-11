@@ -12,6 +12,7 @@ const schema = z.object({
   DEFAULT_MODEL: z.string().default("anthropic:claude-sonnet-5-5"),
   ANTHROPIC_API_KEY: z.string().min(1).optional(),
   OPENAI_API_KEY: z.string().min(1).optional(),
+  OLLAMA_BASE_URL: z.url().default("http://localhost:11434/v1"),
   LANGFUSE_PUBLIC_KEY: z.string().optional(),
   LANGFUSE_SECRET_KEY: z.string().optional(),
   LANGFUSE_BASE_URL: z.url().optional(),
