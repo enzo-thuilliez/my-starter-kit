@@ -1,0 +1,37 @@
+name: Red team
+
+# Prompt-injection suite (evals/redteam.yaml). It calls real models and costs money, so it
+# runs by hand and on pull requests that touch the prompts or the LLM layer only.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: [src/prompts/**, src/lib/llm.ts, evals/redteam*]
+
+permissions:
+  contents: read
+
+# Every action is pinned to a commit SHA, with its tag in a comment; Dependabot bumps both.
+
+jobs:
+  redteam:
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Skip without an API key
+        id: key
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY$OPENAI_API_KEY" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::No ANTHROPIC_API_KEY or OPENAI_API_KEY secret: red team skipped"
+          fi
+      - if: steps.key.outputs.ok == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - if: steps.key.outputs.ok == 'true'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - if: steps.key.outputs.ok == 'true'
+        run: npx -y promptfoo@latest eval -c evals/redteam.yaml --no-progress-bar --no-cache

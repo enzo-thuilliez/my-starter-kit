@@ -50,6 +50,13 @@ Stack: Next.js (App Router, src/), React, TypeScript, pnpm, Tailwind + shadcn/ui
 Vercel AI SDK (Anthropic + OpenAI), Zod env validation, Langfuse via OpenTelemetry,
 Vitest, Playwright, promptfoo.
 
+Red team: `evals/redteam.yaml` is a fixed prompt-injection suite (instruction and role
+override, injection hidden in user data, fake authority, exfiltration by encoding, by link and
+by translation). A canary code in the system prompt must never leak. The `redteam.yml` workflow
+runs it by hand and on PRs that touch the prompts or the LLM layer, and skips without an API key.
+For generated attacks on top, `promptfoo redteam init` builds a larger plan; check its data
+settings first, as some plugins generate attacks through promptfoo's hosted service.
+
 Prompt files are read at runtime. With `output: "standalone"` or on Vercel, include them in
 the server bundle: `outputFileTracingIncludes: { "/api/**": ["./src/prompts/**"] }` in
 `next.config.ts`.
@@ -66,7 +73,7 @@ UI components come from shadcn (`pnpm dlx shadcn@latest add <component>`).
 ## Options to drop
 
 - No LLM: delete `src/lib/llm*`, `src/app/api/ask`, `src/instrumentation.ts`, `evals/`,
-  `evals.yml`, and the ai/@ai-sdk/@langfuse/@opentelemetry deps.
+  `evals.yml`, `redteam.yml`, and the ai/@ai-sdk/@langfuse/@opentelemetry deps.
 
 ## Monorepo (apps/web)
 
