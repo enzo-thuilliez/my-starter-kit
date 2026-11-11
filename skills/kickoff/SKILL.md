@@ -182,7 +182,9 @@ interview), and an "Agent tooling" section when skills or MCP servers were insta
 3. **Why** — the problem, two or three sentences.
 4. **Features** — the v0.1 features, marked planned until built.
 5. **Quick start** — clone, `.env` from `.env.example`, install, run. Commands must work.
-6. **How it works** — a short mermaid diagram of the main moving parts.
+6. **How it works** — a short mermaid diagram of the main moving parts. Under each block, link
+   every code-backed node to its path with a mermaid comment (`%% api: src/app/main.py`); CI
+   (`.github/scripts/check-diagram.py`) fails when a linked path disappears.
 7. **Development** — link to `AGENTS.md` and `CONTRIBUTING.md`, test/lint commands.
 8. **License**.
 

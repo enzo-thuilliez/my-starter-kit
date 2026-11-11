@@ -24,6 +24,8 @@ jobs:
           npm install -g @anthropic-ai/claude-code
           claude plugin validate .
 
+      - name: README diagram checker
+        run: python3 templates/common/.github/scripts/check-diagram.py --self-test
       - name: Validate YAML and JSON
         run: |
           python3 - <<'PY'

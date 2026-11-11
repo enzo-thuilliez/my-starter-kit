@@ -37,6 +37,8 @@ jobs:
         run: cargo doc --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
+      - name: README diagram matches the code
+        run: python3 "$GITHUB_WORKSPACE/.github/scripts/check-diagram.py" "$GITHUB_WORKSPACE/README.md"
 
   deny:
     runs-on: ubuntu-latest

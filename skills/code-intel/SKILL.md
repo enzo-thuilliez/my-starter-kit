@@ -67,3 +67,27 @@ This repo is indexed with **<GitNexus|Graphify>** (<one-line reason>).
 
 If this runs inside `/kit:kickoff`, the AGENTS.md change goes into the bootstrap PR.
 Otherwise commit it as `docs: document code intelligence setup` on a branch and open a PR.
+
+## 5. Draft the README diagram from the graph
+
+Once the repo is indexed, the graph knows the real modules and how they call each other, so
+use it for the README's "How it works" diagram instead of drawing from memory:
+
+1. List the main parts: GitNexus clusters (the `clusters` resource) and the processes that
+   cross them; Graphify's communities and god nodes in `graphify-out/GRAPH_REPORT.md`.
+2. Keep 4–8 nodes a reader cares about (entry points, the core domain, storage, external
+   services). Edges follow the main calls or data flow, labelled with what moves.
+3. Under the mermaid block, link each code-backed node to its folder or file:
+
+   ```mermaid
+   flowchart LR
+       api["API"] --> llm["LLM layer"] --> provider["Model provider"]
+       %% api: src/app/main.py
+       %% llm: src/app/llm.py
+   ```
+
+   External services (`provider` above) get no link. CI runs
+   `.github/scripts/check-diagram.py`, which fails when a linked path disappears, so the
+   diagram cannot silently describe code that was renamed or deleted.
+4. When a PR moves a linked module, update the link (and the diagram if the flow changed) in
+   the same PR.

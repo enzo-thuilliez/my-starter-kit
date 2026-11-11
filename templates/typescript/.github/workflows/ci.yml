@@ -36,6 +36,8 @@ jobs:
         run: pnpm test
       - name: Build
         run: pnpm build
+      - name: README diagram matches the code
+        run: python3 "$GITHUB_WORKSPACE/.github/scripts/check-diagram.py" "$GITHUB_WORKSPACE/README.md"
 
   e2e:
     runs-on: ubuntu-latest
