@@ -36,6 +36,13 @@ Numbers from data: any answer the LLM builds from data goes through
 Derived figures (sums, ratios) are computed in code and passed in as data. The eval
 `evals/assert_numbers.py` applies the same check.
 
+Eval gate: `evals.yml` runs the promptfoo suite on PRs that touch the prompts, the LLM layer
+or the evals, compares it with the last run on `main` (kept as the `eval-baseline` artifact)
+and posts the result on the PR. It fails when the pass rate drops by more than `EVAL_MAX_DROP`
+or a run costs more than `EVAL_MAX_COST_USD` (both set in the workflow). It is a separate check
+from `ci-pass` on purpose: it only runs on some PRs and needs an API key, so making it a
+required check would block every other PR.
+
 Red team: `evals/redteam.yaml` is a fixed prompt-injection suite (instruction and role
 override, injection hidden in user data, fake authority, exfiltration by encoding, by link and
 by translation). A canary code in the system prompt must never leak. The `redteam.yml` workflow
@@ -58,7 +65,7 @@ in code; a change is a new version file, evaluated by promptfoo before the code 
 ## Options to drop
 
 - No API: delete `src/app/main.py`, `src/app/schema.py`, `tests/test_api.py`, `tests/test_schema.py`, fastapi/uvicorn deps and the Dockerfile CMD.
-- No LLM: delete `src/app/llm.py`, `tests/test_llm.py`, `evals/`, `evals.yml`, `redteam.yml`, litellm/langfuse deps.
+- No LLM: delete `src/app/llm.py`, `tests/test_llm.py`, `evals/`, `evals.yml`, `redteam.yml`, `.github/scripts/eval-gate.mjs`, litellm/langfuse deps.
 
 ## Monorepo (apps/api)
 
@@ -67,3 +74,4 @@ set `on.pull_request.paths: [apps/api/**]`, and in `dependabot.yml` set `directo
 In `release-please-config.json` use the key `apps/api`.
 In a Python + TypeScript monorepo the root `.devcontainer/devcontainer.json` comes from this
 stack (Python image with Node); the TypeScript one is skipped, which is expected.
+In a monorepo, prefix the `paths:` filters of `evals.yml` and `redteam.yml` with `apps/api/`.

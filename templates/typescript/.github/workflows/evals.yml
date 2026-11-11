@@ -1,23 +1,93 @@
 name: Evals
 
-# Manual on purpose: evals call real models and cost money.
+# Real model calls: they cost money. Runs on pull requests that touch the prompts, the LLM
+# layer or the evals (gated against main), on pushes to main (new baseline), and by hand.
+# Without an API key secret the job skips with a notice.
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [src/prompts/**, src/lib/llm.ts, evals/**]
+  pull_request:
+    paths: [src/prompts/**, src/lib/llm.ts, evals/**]
 
 permissions:
   contents: read
+  actions: read # download the baseline from main
+  pull-requests: write # post the comparison on the PR
+
+concurrency:
+  group: evals-${{ github.ref }}
+  cancel-in-progress: true
 
 # Every action is pinned to a commit SHA, with its tag in a comment; Dependabot bumps both.
 
 jobs:
-  promptfoo:
+  evals:
     runs-on: ubuntu-latest
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      EVAL_MAX_DROP: "0.05" # largest pass-rate drop allowed vs main (0.05 = 5 points)
+      EVAL_MAX_COST_USD: "1.00" # budget for one run
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - name: Skip without an API key
+        id: key
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY$OPENAI_API_KEY" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::No ANTHROPIC_API_KEY or OPENAI_API_KEY secret: evals skipped"
+          fi
+      - if: steps.key.outputs.ok == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - if: steps.key.outputs.ok == 'true'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
-      - run: npx -y promptfoo@latest eval -c evals/promptfooconfig.yaml --no-progress-bar
+      - name: Run evals
+        if: steps.key.outputs.ok == 'true'
+        # promptfoo exits non-zero when a test fails; the gate below decides instead.
+        run: |
+          npx -y promptfoo@latest eval -c evals/promptfooconfig.yaml --no-progress-bar --no-cache -o "$RUNNER_TEMP/evals.json" || true
+          test -s "$RUNNER_TEMP/evals.json"
+      - name: Baseline from main
+        if: steps.key.outputs.ok == 'true' && github.event_name == 'pull_request'
+        run: |
+          id=$(gh run list -R "$GITHUB_REPOSITORY" --workflow evals.yml --branch main --event push \
+            --status completed -L 1 --json databaseId --jq '.[0].databaseId // empty')
+          if [ -n "$id" ]; then
+            gh run download "$id" -R "$GITHUB_REPOSITORY" -n eval-baseline -D "$RUNNER_TEMP/baseline" || true
+          fi
+      - name: Gate
+        id: gate
+        if: steps.key.outputs.ok == 'true'
+        run: |
+          set +e
+          node "$GITHUB_WORKSPACE/.github/scripts/eval-gate.mjs" "$RUNNER_TEMP/evals.json" \
+            "$RUNNER_TEMP/baseline/evals.json" > "$RUNNER_TEMP/comment.md"
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          cat "$RUNNER_TEMP/comment.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Comment on the PR
+        if: steps.key.outputs.ok == 'true' && github.event_name == 'pull_request'
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq '.[] | select(.body | startswith("<!-- eval-gate -->")) | .id' | head -n 1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F body=@"$RUNNER_TEMP/comment.md" >/dev/null
+          else
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -F body=@"$RUNNER_TEMP/comment.md" >/dev/null
+          fi
+      - name: Save as the new baseline
+        if: steps.key.outputs.ok == 'true' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: eval-baseline
+          path: ${{ runner.temp }}/evals.json
+          retention-days: 90
+      - name: Fail when the gate failed
+        if: steps.gate.outputs.status != '' && steps.gate.outputs.status != '0'
+        run: exit 1
