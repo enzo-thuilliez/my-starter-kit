@@ -54,6 +54,7 @@ jobs:
           cd "$T"
           echo "# demo" > README.md
           uv lock && uv sync
+          uv run python -m app.schema
           uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pytest
       - name: Dependency audit (same command as the template CI)
         run: |

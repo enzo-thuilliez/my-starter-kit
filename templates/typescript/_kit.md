@@ -70,7 +70,19 @@ UI components come from shadcn (`pnpm dlx shadcn@latest add <component>`).
 
 ## Monorepo (apps/web)
 
-Scaffold and copy into `apps/web/`. In `ci.yml` and `evals.yml` add
+Scaffold and copy into `apps/web/`.
+
+Typed API client: generate the types from the API's committed `openapi.json` instead of
+writing them by hand. `pnpm add -D openapi-typescript` (and `pnpm add openapi-fetch` for a
+typed `fetch`), then add the script
+`"api:types": "openapi-typescript ../api/openapi.json -o src/api/schema.d.ts"`, run it, commit
+`src/api/schema.d.ts`, and add this step to the web job in `ci.yml` so drift fails CI:
+
+```yaml
+      - name: API types match the API schema
+        run: pnpm api:types && git diff --exit-code src/api/schema.d.ts
+```
+ In `ci.yml` and `evals.yml` add
 `defaults.run.working-directory: apps/web`, set `cache-dependency-path: apps/web/pnpm-lock.yaml`,
 add `on.pull_request.paths: [apps/web/**]`; in `dependabot.yml` use `directory: /apps/web`
 for npm; in `release-please-config.json` use the key `apps/web`.
