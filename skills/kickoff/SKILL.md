@@ -76,7 +76,11 @@ dump a long list of items as text: both failed in real runs.
 4. **Infer the rest without asking**: target user, out of scope, data, auth, README visuals,
    5–8 GitHub topics, and agent pitfalls (secrets, model ids, what tests must mock).
 
-5. **Final spec** as a compact two-column table (keep cells short so it renders in a terminal),
+5. **Suggested skills and MCP servers**: search skills.sh and the official MCP registry for
+   what fits the spec, vet each candidate, and offer at most 5 in one `multiSelect` question.
+   Procedure and install commands: [suggestions.md](suggestions.md).
+
+6. **Final spec** as a compact two-column table (keep cells short so it renders in a terminal),
    then: "Reply `go` to create everything, or tell me what to change." Create nothing before
    `go`.
 
@@ -153,6 +157,8 @@ Then:
   denylist terms.
 - Local-first LLM → apply "Local-first profile" from `_kit.md` (model ids, `.env.example`,
   quickstart, and its ADR in DECISIONS.md).
+- Install the skills and MCP servers the user picked (project scope, pinned), as in
+  [suggestions.md](suggestions.md#4-install-after-go-in-step-6).
 - Add what the spec asked for that templates don't cover (database client, auth) only
   as dependencies + one minimal wiring file with a test; the features themselves are issues.
 
@@ -162,8 +168,9 @@ Then:
 spec surfaced).
 
 **AGENTS.md** — fill every `<!-- kickoff ... -->` marker: project summary, stack, the command
-table from `_kit.md`, folder map, conventions (including the user's answer to question 13).
-Leave no marker and no `{{PLACEHOLDER}}` behind.
+table from `_kit.md`, folder map, conventions (including the agent pitfalls inferred in the
+interview), and an "Agent tooling" section when skills or MCP servers were installed
+([suggestions.md](suggestions.md#5-record)). Leave no marker and no `{{PLACEHOLDER}}` behind.
 
 **README.md** — selling, in this order:
 
@@ -281,4 +288,5 @@ Finish with: the PR link (to review and merge), a note that releases are off unt
 "first release" issue is done (and that release PRs then need the admin bypass, since
 GitHub does not run all checks on PRs opened by the Actions bot), the issues created, the secrets to add in
 **Settings → Secrets → Actions** if evals are used (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`),
-and anything skipped or left for the user. Never merge the PR yourself.
+the skills and MCP servers installed (with any variable they need in `.env`), and anything
+skipped or left for the user. Never merge the PR yourself.
