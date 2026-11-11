@@ -1,6 +1,6 @@
 {
   "name": "kit",
-  "description": "Bootstrap new repos (structure, README, CI, issues/PR flow), audit existing ones against the same conventions, and pick the right code-intelligence tool per repo.",
+  "description": "Bootstrap new repos (structure, README, CI, issues/PR flow), audit and sync existing ones with the same conventions, and pick the right code-intelligence tool per repo.",
   "author": {
     "name": "Enzo Thuilliez",
     "url": "https://github.com/enzo-thuilliez"
