@@ -22,6 +22,12 @@ uv run pytest            # must pass before the first commit
 
 Stack: Python 3.12, uv, FastAPI, pydantic-settings, LiteLLM (provider-agnostic calls), Langfuse (tracing), Ruff, mypy strict, pytest, promptfoo.
 
+Testing: unit tests mock `litellm.completion`; `tests/test_llm_replay.py` shows the other way,
+replaying a recorded call (pytest-recording / VCR.py, cassettes in `tests/cassettes/`, record
+with `--record-mode=once`, credentials stripped by `conftest.py`). Invariants get Hypothesis
+property tests (`tests/test_guardrails_properties.py`): weights summing to 1, a risk figure never
+negative, a parser reading back what a formatter wrote.
+
 Numbers from data: any answer the LLM builds from data goes through
 `app.guardrails.enforce_numbers(answer, data)` before it reaches a user or a document. It blocks
 (or, with `mode="flag"`, reports) every number that is not in the data, once rounded as written.
