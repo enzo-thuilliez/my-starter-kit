@@ -68,3 +68,5 @@ Scaffold and copy into `apps/web/`. In `ci.yml` and `evals.yml` add
 `defaults.run.working-directory: apps/web`, set `cache-dependency-path: apps/web/pnpm-lock.yaml`,
 add `on.pull_request.paths: [apps/web/**]`; in `dependabot.yml` use `directory: /apps/web`
 for npm; in `release-please-config.json` use the key `apps/web`.
+The Python stack's dev container (Python with Node) is used at the root; this stack's
+`devcontainer.json` is listed as skipped, which is expected.

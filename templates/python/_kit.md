@@ -38,3 +38,5 @@ Conventions: all LLM calls go through `app.llm.complete()`; config only through 
 Copy into `apps/api/`, then in `ci.yml` and `evals.yml` add `defaults.run.working-directory: apps/api`,
 set `on.pull_request.paths: [apps/api/**]`, and in `dependabot.yml` set `directory: /apps/api` for `uv`.
 In `release-please-config.json` use the key `apps/api`.
+In a Python + TypeScript monorepo the root `.devcontainer/devcontainer.json` comes from this
+stack (Python image with Node); the TypeScript one is skipped, which is expected.

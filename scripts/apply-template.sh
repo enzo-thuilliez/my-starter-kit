@@ -13,7 +13,8 @@
 #   - --no-clobber (retrofit mode) never touches an existing file; conflicts are
 #     listed at the end so the agent can merge them by hand.
 #   - --subdir puts a stack's files under SUB/ (monorepo: apps/api, apps/web).
-#     It applies to the --stack flags that follow it; `.github/` always goes to the root.
+#     It applies to the --stack flags that follow it; `.github/` and `.devcontainer/`
+#     always go to the root.
 
 set -euo pipefail
 
@@ -68,8 +69,10 @@ for entry in "${PLAN[@]}"; do
         # ci.yml -> ci-api.yml so two stacks' workflows can live side by side.
         name="$(basename "$rel" .yml)"
         dest_rel=".github/workflows/${name}-$(basename "$sub").yml"
-      elif [[ "$rel" == .github/* ]]; then
-        clobber_ok=0   # shared repo-level file (dependabot.yml): never overwrite, merge by hand
+      elif [[ "$rel" == .github/* || "$rel" == .devcontainer/* ]]; then
+        # Shared repo-level file (dependabot.yml, devcontainer.json): stays at the root,
+        # never overwritten; the first stack wins and the rest is listed to merge by hand.
+        clobber_ok=0
       else
         dest_rel="$sub/$rel"
       fi
