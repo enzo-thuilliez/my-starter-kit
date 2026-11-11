@@ -50,10 +50,16 @@ Stack: Next.js (App Router, src/), React, TypeScript, pnpm, Tailwind + shadcn/ui
 Vercel AI SDK (Anthropic + OpenAI), Zod env validation, Langfuse via OpenTelemetry,
 Vitest, Playwright, promptfoo.
 
+Prompt files are read at runtime. With `output: "standalone"` or on Vercel, include them in
+the server bundle: `outputFileTracingIncludes: { "/api/**": ["./src/prompts/**"] }` in
+`next.config.ts`.
+
 Security checks: CI runs `pnpm audit --prod --audit-level high` (job `audit`, part of
 `ci-pass`). Accepted advisories go under `auditConfig.ignoreGhsas` in `pnpm-workspace.yaml`.
 
 Conventions: all LLM calls go through `src/lib/llm.ts` (`complete()` / `resolveModel()`);
+prompts live in `src/prompts/<name>/v<N>.md` and are rendered with `renderPrompt()` from
+`src/lib/prompts.ts` (a change is a new version file, evaluated by promptfoo first);
 env vars only through `env()` from `src/env.ts`; unit tests mock `ai`, never call a real model;
 UI components come from shadcn (`pnpm dlx shadcn@latest add <component>`).
 

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { complete } from "@/lib/llm";
+import { renderPrompt } from "@/lib/prompts";
 
 const body = z.object({ prompt: z.string().min(1) });
 
@@ -11,6 +12,7 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
-  const answer = await complete(parsed.data.prompt, { functionId: "ask" });
+  const prompt = renderPrompt("ask", 1, { question: parsed.data.prompt });
+  const answer = await complete(prompt, { functionId: "ask" });
   return Response.json({ answer });
 }

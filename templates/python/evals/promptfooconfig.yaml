@@ -1,11 +1,14 @@
 # Run with: uv run promptfoo eval -c evals/promptfooconfig.yaml   (needs API keys in .env)
+# Paths are relative to this file.
+# Every version of every prompt in src/app/prompts is evaluated side by side, so a new
+# version (v2.md) is compared with the current one before the app switches to it.
 description: "{{PROJECT_NAME}} evals"
 
 prompts:
-  - "Answer in one short sentence: {{question}}"
+  - file://../src/app/prompts/ask/v*.md
 
 providers:
-  - id: file://evals/provider.py
+  - id: file://provider.py
     label: default-model
 
 tests:
