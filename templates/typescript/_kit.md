@@ -50,6 +50,9 @@ Stack: Next.js (App Router, src/), React, TypeScript, pnpm, Tailwind + shadcn/ui
 Vercel AI SDK (Anthropic + OpenAI), Zod env validation, Langfuse via OpenTelemetry,
 Vitest, Playwright, promptfoo.
 
+Security checks: CI runs `pnpm audit --prod --audit-level high` (job `audit`, part of
+`ci-pass`). Accepted advisories go under `auditConfig.ignoreGhsas` in `pnpm-workspace.yaml`.
+
 Conventions: all LLM calls go through `src/lib/llm.ts` (`complete()` / `resolveModel()`);
 env vars only through `env()` from `src/env.ts`; unit tests mock `ai`, never call a real model;
 UI components come from shadcn (`pnpm dlx shadcn@latest add <component>`).
