@@ -36,6 +36,13 @@ Numbers from data: any answer the LLM builds from data goes through
 Derived figures (sums, ratios) are computed in code and passed in as data. The eval
 `evals/assert_numbers.py` applies the same check.
 
+Red team: `evals/redteam.yaml` is a fixed prompt-injection suite (instruction and role
+override, injection hidden in user data, fake authority, exfiltration by encoding, by link and
+by translation). A canary code in the system prompt must never leak. The `redteam.yml` workflow
+runs it by hand and on PRs that touch the prompts or the LLM layer, and skips without an API key.
+For generated attacks on top, `promptfoo redteam init` builds a larger plan; check its data
+settings first, as some plugins generate attacks through promptfoo's hosted service.
+
 Prompt management: the files are the source of truth. If the project uses Langfuse prompt
 management instead, keep one loader in `app/prompts` so the code never cares where a prompt
 comes from.
@@ -51,7 +58,7 @@ in code; a change is a new version file, evaluated by promptfoo before the code 
 ## Options to drop
 
 - No API: delete `src/app/main.py`, `src/app/schema.py`, `tests/test_api.py`, `tests/test_schema.py`, fastapi/uvicorn deps and the Dockerfile CMD.
-- No LLM: delete `src/app/llm.py`, `tests/test_llm.py`, `evals/`, `evals.yml`, litellm/langfuse deps.
+- No LLM: delete `src/app/llm.py`, `tests/test_llm.py`, `evals/`, `evals.yml`, `redteam.yml`, litellm/langfuse deps.
 
 ## Monorepo (apps/api)
 

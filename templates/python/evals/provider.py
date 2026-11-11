@@ -6,5 +6,5 @@ from app.llm import complete
 
 
 def call_api(prompt: str, options: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
-    model = options.get("config", {}).get("model")
-    return {"output": complete(prompt, model=model)}
+    config = options.get("config", {})
+    return {"output": complete(prompt, system=config.get("system"), model=config.get("model"))}
