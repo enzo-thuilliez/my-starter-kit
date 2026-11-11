@@ -27,5 +27,5 @@ Instructions for AI coding agents working **on this repository** (the kit itself
 
 ```bash
 claude plugin validate .
-shellcheck install.sh scripts/*.sh
+shellcheck install.sh scripts/*.sh templates/common/.claude/hooks/*.sh
 ```
