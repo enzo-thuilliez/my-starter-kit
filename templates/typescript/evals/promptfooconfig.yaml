@@ -1,8 +1,10 @@
 # Run with: pnpm evals   (needs API keys in .env)
 description: "{{PROJECT_NAME}} evals"
 
+# Every version of every prompt in src/prompts is evaluated side by side, so a new version
+# (v2.md) is compared with the current one before the app switches to it.
 prompts:
-  - "Answer in one short sentence: {{question}}"
+  - file://../src/prompts/ask/v*.md
 
 providers:
   - id: anthropic:messages:claude-sonnet-5-5
