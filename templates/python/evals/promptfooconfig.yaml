@@ -17,3 +17,11 @@ tests:
     assert:
       - type: icontains
         value: Paris
+  # Number guardrail: the answer may only restate numbers given in the input.
+  - vars:
+      question: >-
+        Revenue was 1,234,000 EUR in 2025 and the operating margin was 12.5%.
+        Summarise the year in one sentence.
+    assert:
+      - type: python
+        value: file://assert_numbers.py

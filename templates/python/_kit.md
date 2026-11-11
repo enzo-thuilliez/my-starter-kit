@@ -22,6 +22,12 @@ uv run pytest            # must pass before the first commit
 
 Stack: Python 3.12, uv, FastAPI, pydantic-settings, LiteLLM (provider-agnostic calls), Langfuse (tracing), Ruff, mypy strict, pytest, promptfoo.
 
+Numbers from data: any answer the LLM builds from data goes through
+`app.guardrails.enforce_numbers(answer, data)` before it reaches a user or a document. It blocks
+(or, with `mode="flag"`, reports) every number that is not in the data, once rounded as written.
+Derived figures (sums, ratios) are computed in code and passed in as data. The eval
+`evals/assert_numbers.py` applies the same check.
+
 Prompt management: the files are the source of truth. If the project uses Langfuse prompt
 management instead, keep one loader in `app/prompts` so the code never cares where a prompt
 comes from.
