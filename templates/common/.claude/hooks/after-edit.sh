@@ -65,7 +65,16 @@ case "$file" in
   *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs|*.json|*.css)
     if root="$(root_with package.json)"; then
       cd "$root" || exit 0
-      [[ -x node_modules/.bin/biome ]] && run "biome" node_modules/.bin/biome check --write "$file"
+      if [[ -x node_modules/.bin/biome ]]; then
+        run "biome" node_modules/.bin/biome check --write "$file"
+      else
+        # No Biome: ESLint (code files only) then Prettier, when the project has them.
+        case "$file" in
+          *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs)
+            [[ -x node_modules/.bin/eslint ]] && run "eslint" node_modules/.bin/eslint --fix "$file" ;;
+        esac
+        [[ -x node_modules/.bin/prettier ]] && run "prettier" node_modules/.bin/prettier --write "$file"
+      fi
       if [[ -x node_modules/.bin/vitest && "$file" == *.ts* && "$file" != */e2e/* ]]; then
         run "vitest" node_modules/.bin/vitest related --run --passWithNoTests "$file"
       fi
