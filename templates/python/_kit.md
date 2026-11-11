@@ -6,7 +6,8 @@ Not copied into the project. Read by the skill.
 
 ```bash
 uv lock && uv sync
-uv run pytest            # must pass before the first commit
+uv run python -m app.schema   # writes openapi.json (committed; a test checks it matches the code)
+uv run pytest                 # must pass before the first commit
 ```
 
 ## AGENTS.md values
@@ -19,6 +20,7 @@ uv run pytest            # must pass before the first commit
 | Type-check | `uv run mypy` |
 | Tests | `uv run pytest` |
 | Evals | `uv run promptfoo eval -c evals/promptfooconfig.yaml` |
+| API schema | `uv run python -m app.schema` (after any API change) |
 
 Stack: Python 3.12, uv, FastAPI, pydantic-settings, LiteLLM (provider-agnostic calls), Langfuse (tracing), Ruff, mypy strict, pytest, promptfoo.
 
@@ -48,7 +50,7 @@ in code; a change is a new version file, evaluated by promptfoo before the code 
 
 ## Options to drop
 
-- No API: delete `src/app/main.py`, `tests/test_api.py`, fastapi/uvicorn deps and the Dockerfile CMD.
+- No API: delete `src/app/main.py`, `src/app/schema.py`, `tests/test_api.py`, `tests/test_schema.py`, fastapi/uvicorn deps and the Dockerfile CMD.
 - No LLM: delete `src/app/llm.py`, `tests/test_llm.py`, `evals/`, `evals.yml`, litellm/langfuse deps.
 
 ## Monorepo (apps/api)
