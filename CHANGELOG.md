@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.4.0](https://github.com/enzo-thuilliez/my-starter-kit/compare/my-starter-kit-v0.3.0...my-starter-kit-v0.4.0) (2026-11-11)
+
+
+### Features
+
+* **templates:** let protect-secrets guard extra folders ([#74](https://github.com/enzo-thuilliez/my-starter-kit/issues/74)) ([181d099](https://github.com/enzo-thuilliez/my-starter-kit/commit/181d0992befe34068a223e886c3ae2e3d4b58c78))
+* **templates:** support eslint and prettier in after-edit hook ([#72](https://github.com/enzo-thuilliez/my-starter-kit/issues/72)) ([1083b8d](https://github.com/enzo-thuilliez/my-starter-kit/commit/1083b8d19f2a962bde15997ad6d72e51fb0d17d6))
+
+
+### Bug Fixes
+
+* **templates:** find hoisted vitest in after-edit hook ([#73](https://github.com/enzo-thuilliez/my-starter-kit/issues/73)) ([1ae1f4d](https://github.com/enzo-thuilliez/my-starter-kit/commit/1ae1f4d1c462536afcd881e9a97fe60982a03746))
+* **templates:** read the rust edition in after-edit hook ([#71](https://github.com/enzo-thuilliez/my-starter-kit/issues/71)) ([13509e7](https://github.com/enzo-thuilliez/my-starter-kit/commit/13509e7c8ad4ef0d4850f377839ea7b85c74a931))
+
 ## [0.3.0](https://github.com/enzo-thuilliez/my-starter-kit/compare/my-starter-kit-v0.2.1...my-starter-kit-v0.3.0) (2026-11-11)
 
 
