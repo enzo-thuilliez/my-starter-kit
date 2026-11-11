@@ -190,7 +190,7 @@ notes that matter as much as code → **Graphify**. It tells you why, indexes, a
 ## Contributing
 
 Issues and PRs welcome. The kit follows its own rules: see [AGENTS.md](AGENTS.md).
-Before a PR: `claude plugin validate .` and `shellcheck install.sh scripts/*.sh templates/common/.claude/hooks/*.sh templates/common/.devcontainer/*.sh`.
+Before a PR: `claude plugin validate .` and `shellcheck install.sh scripts/*.sh templates/common/.claude/hooks/*.sh templates/common/.devcontainer/*.sh templates/privacy/scripts/*.sh`.
 
 ## License
 

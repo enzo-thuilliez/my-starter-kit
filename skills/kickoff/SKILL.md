@@ -19,6 +19,7 @@ The kit root is two directories above this `SKILL.md` (`<kit>/skills/kickoff/SKI
 - `<kit>/templates/python/`, `<kit>/templates/typescript/` and `<kit>/templates/rust/` are the stacks. Read the stack's
   `_kit.md` before applying it: it has the scaffold commands, the AGENTS.md command table,
   and the monorepo adjustments.
+- `<kit>/templates/privacy/` is an opt-in overlay for projects with real data (see its `_kit.md`).
 
 ## 1. Detect the starting point
 
@@ -55,7 +56,9 @@ dump a long list of items as text: both failed in real runs.
    always type their own answer.
    - **Name**: three kebab-case names, each with its one-line pitch in the description.
    - **v0.1 features** (`multiSelect`): the 3–4 features most likely needed, all meant to be
-     ticked; the user unticks or adds via Other.
+     ticked; the user unticks or adds via Other. When the description involves real or
+     personal data (staff, clients, patients, accounts), one option is "Privacy guard: no real
+     data in the repo, pseudonymized outbound calls".
    - **Stack**: Python (FastAPI) / TypeScript (Next.js) / Rust (CLI or library) / Python +
      TypeScript monorepo. Pre-select from the description.
    - **LLM**: the concrete choice (e.g. "Anthropic, claude-sonnet-5-5") / several providers /
@@ -145,6 +148,9 @@ Then:
 - **Retrofit**: for every file the script reports as skipped, merge what is missing into the
   existing file by hand. Never rewrite the project's own code or config wholesale.
 - Remove the options the spec ruled out (no LLM → see "Options to drop" in `_kit.md`).
+- Privacy guard picked → apply `--stack privacy` and follow `templates/privacy/_kit.md` (CI
+  job, `DENYLIST` secret set by the user, AGENTS.md hard rules, two ADRs). Never ask for the
+  denylist terms.
 - Local-first LLM → apply "Local-first profile" from `_kit.md` (model ids, `.env.example`,
   quickstart, and its ADR in DECISIONS.md).
 - Add what the spec asked for that templates don't cover (database client, auth) only
