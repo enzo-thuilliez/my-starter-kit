@@ -8,8 +8,9 @@ Instructions for AI coding agents working **on this repository** (the kit itself
 
 - `install.sh` — idempotent machine setup (plugins, MCP servers, CLIs).
 - `scripts/apply-template.sh` — copies templates into a project (used by `/kit:kickoff`).
+- `scripts/audit.sh` — read-only check of a repo against the conventions (used by `/kit:audit`).
 - `global/CLAUDE.md` — cross-project rules installed into `~/.claude/CLAUDE.md`.
-- `skills/` — plugin skills (`/kit:kickoff`, `/kit:code-intel`).
+- `skills/` — plugin skills (`/kit:kickoff`, `/kit:audit`, `/kit:code-intel`).
 - `templates/common/` — files copied into every new repo.
 - `templates/<stack>/` — stack-specific files (`python`, `typescript`, `rust`), plus the
   opt-in `privacy` overlay for projects that handle real data.
