@@ -22,6 +22,10 @@ uv run pytest            # must pass before the first commit
 
 Stack: Python 3.12, uv, FastAPI, pydantic-settings, LiteLLM (provider-agnostic calls), Langfuse (tracing), Ruff, mypy strict, pytest, promptfoo.
 
+Security checks: CI runs `pip-audit` on the locked dependencies (job `audit`, part of
+`ci-pass`); Ruff's `S` rules already cover what Bandit checks. For deeper static analysis, add
+Semgrep (`uvx semgrep scan --config auto --error`) as a step in the same job.
+
 Conventions: all LLM calls go through `app.llm.complete()`; config only through `app.config.get_settings()`; tests mock `litellm.completion`, never call a real model.
 
 ## Options to drop
