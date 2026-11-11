@@ -25,6 +25,20 @@ root_with() {
   return 1
 }
 
+# Rust edition: first literal `edition = "NNNN"` found in a Cargo.toml walking up from the
+# file (a member crate with `edition.workspace = true` falls through to the workspace root).
+rust_edition() {
+  local dir e; dir="$(dirname "$file")"
+  while [[ "$dir" != / ]]; do
+    if [[ -f "$dir/Cargo.toml" ]]; then
+      e="$(sed -nE 's/^[[:space:]]*edition[[:space:]]*=[[:space:]]*"([0-9]{4})".*/\1/p' "$dir/Cargo.toml" | head -n1)"
+      [[ -n "$e" ]] && { echo "$e"; return 0; }
+    fi
+    dir="$(dirname "$dir")"
+  done
+  echo 2024
+}
+
 report=""
 run() { # <label> <command...>: record the output when the command fails
   local out
@@ -60,7 +74,7 @@ case "$file" in
   *.rs)
     if root="$(root_with Cargo.toml)" && command -v cargo >/dev/null 2>&1; then
       cd "$root" || exit 0
-      run "rustfmt" rustfmt --edition 2024 "$file"
+      run "rustfmt" rustfmt --edition "$(rust_edition)" "$file"
       run "clippy" cargo clippy --quiet --all-targets -- -D warnings
     fi
     ;;
